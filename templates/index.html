@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+<head>
+  <title>pryce</title>
+</head>
+<body>
+
+    <h1>pryce!</h1>
+    <p>Just a simple placeholder page...</p>
+
+    <h2>Items</h2>
+    <ul>
+    {% for item in items %}
+        <li >{{ item.name }} - {{item.barcode}}</li>
+    {% endfor %}
+    </ul>
+
+  <a href="https://github.com/jpcasey/pryce">GitHub</a>
+</body>
+</html>

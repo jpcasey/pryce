@@ -4,6 +4,8 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+script:
+  - echo "no tests to run yet"
 deploy:
   provider: gae
   keyfile: secure/client-secret.json

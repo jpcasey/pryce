@@ -4,11 +4,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.schema import FetchedValue
 from sqlalchemy.dialects.postgresql.base import MONEY
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_login import UserMixin
 
 db = SQLAlchemy()
-
-
 
 class Acces(db.Model):
     __tablename__ = 'access'
@@ -151,12 +149,11 @@ class Store(db.Model):
     location = db.relationship('Location', primaryjoin='Store.location_id == Location.location_id', backref='stores')
 
 
-
-class Usr(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'usr'
 
-    usr_id = db.Column(db.Integer, primary_key=True)
-    usrname = db.Column(db.String)
+    user_id = db.Column('usr_id', db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True)
     password = db.Column(db.String)
     home = db.Column(db.ForeignKey('location.location_id', ondelete='RESTRICT', onupdate='CASCADE'))
     karma = db.Column(db.Integer)
@@ -164,3 +161,5 @@ class Usr(db.Model):
 
     image = db.relationship('Image', primaryjoin='Usr.avatar == Image.image_id', backref='usrs')
     location = db.relationship('Location', primaryjoin='Usr.home == Location.location_id', backref='usrs')
+   
+

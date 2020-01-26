@@ -5,9 +5,7 @@ from sqlalchemy.schema import FetchedValue
 from sqlalchemy.dialects.postgresql.base import MONEY
 from flask_sqlalchemy import SQLAlchemy
 
-
-db = SQLAlchemy()
-
+from ..main import db
 
 
 class Acces(db.Model):
@@ -31,9 +29,6 @@ class Appuser(db.Model):
     location = db.relationship('Location', primaryjoin='Appuser.home == Location.location_id', backref='appusers')
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
-    def __repr__(self):
-        return "Appuser(appuser_id='{self.appuser_id}', username='{self.username}', home='{self.home}',"\
-        "karma='{self.karma}')".format(self=self) 
 
 
 class Badge(db.Model):
@@ -119,7 +114,7 @@ class ListItem(db.Model):
     __tablename__ = 'list_item'
 
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True, nullable=False)
-    list_id = db.Column(db.ForeignKey('list.list_id', ondelete='RESTRICT', onupdate='CASCADE'), db.ForeignKey('list.list_id'), primary_key=True, nullable=False)
+    list_id = db.Column(db.ForeignKey('list.list_id'), db.ForeignKey('list.list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True, nullable=False)
     quantity = db.Column(db.Integer, server_default=db.FetchedValue())
 
     item = db.relationship('Item', primaryjoin='ListItem.item_id == Item.item_id', backref='list_items')

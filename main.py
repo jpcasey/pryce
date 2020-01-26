@@ -1,32 +1,23 @@
 # Just a test app to get the deployment and DB connection stuff straight...
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import os
-
-if os.environ.get('ENV_TYPE') == 'GCP':
-    # Build the database connection string for our Google Cloud Platform PostgreSQL instance
-    db_user = os.environ.get('DB_USER')
-    db_pass = os.environ.get('DB_PASS')
-    db_name = os.environ.get('DB_NAME')
-    instance_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
-    db_connection_string = 'postgres+pg8000://{}:{}@/{}?unix_sock=/cloudsql/{}/.s.PGSQL.5432'.format(db_user, db_pass, db_name, instance_connection_name)
-else:
-    # use a local sqlite db. We might want to use SQL Proxy to develop locally with the Google DB https://cloud.google.com/sql/docs/postgres/sql-proxy
-    db_connection_string = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'test.db')
+from flask_migrate import Migrate
+from pryce.config import Config
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = db_connection_string
+app.config.from_object(Config)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-class Item(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=False, nullable=False)
-    barcode = db.Column(db.String(100), unique=True, nullable=False)
+from pryce.database.models import *
 
-    def __init__(self, name, barcode):
-        self.name = name
-        self.barcode = barcode
+@app.route('/login')
+def login():
+    usr = Appuser(username='testing3')
+    db.session.add(usr)
+    db.session.commit()
+    #return render_template('login.html')
+    return "Looks good"
 
 @app.route('/')
 def root():

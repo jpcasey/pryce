@@ -1,3 +1,5 @@
+*.swo
+*.swp
 *.test
 *.log
 *.db

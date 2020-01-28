@@ -1,3 +1,6 @@
+*.swo
+*.swp
+*.test
 *.log
 *.db
 .ignore/

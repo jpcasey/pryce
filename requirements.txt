@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 pg8000
 psycopg2-binary==2.8.4
 gunicorn
+flask_migrate

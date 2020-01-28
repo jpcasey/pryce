@@ -5,7 +5,7 @@ from sqlalchemy.schema import FetchedValue
 from sqlalchemy.dialects.postgresql.base import MONEY
 from flask_sqlalchemy import SQLAlchemy
 
-from ..main import db
+from .. import db
 
 
 class Acces(db.Model):

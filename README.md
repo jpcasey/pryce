@@ -11,7 +11,13 @@ This will be updated periodically as we get further along.
 * Install dependencies:
   * `pip install -r requirements.txt`
 * Run development server:
-  * `python main.py` will start the dev server on http://localhost:8080
+  * Set the following environmental variables. Set SQLALCHEMY_DATABASE_URI to whichever database you're using for local dev. (should make this dev env setup easier, possibly just putting the below into a .env file or shell script).
+    ```sh 
+    export FLASK_APP=pryce
+    export FLASK_ENV=development
+    export SQLALCHEMY_DATABASE_URI=
+    ```
+  * `flask run` will start the dev server on http://localhost:5000 
 
 ### Deployments
 This repository is configured to use Travis CI.  There are not any tests being run yet.  But, Travis does handle the automated deployments to our [Google App Engine](https://console.cloud.google.com/) instance.  Any pushes to master will be subsequently deployed to app engine, so we should aim to commit any breaking changes to a branch and create a Pull Request to merge into master once everything looks OK.

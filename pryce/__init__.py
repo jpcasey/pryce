@@ -9,6 +9,13 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from pryce.database.models import *
+import pryce.controllers.items as items
+import pryce.controllers.stores as stores
+
+# don't require trailing slash after endpoints
+app.url_map.strict_slashes = False
+app.register_blueprint(items.bp)
+app.register_blueprint(stores.bp)
 
 @app.route('/login')
 def login():
@@ -20,20 +27,4 @@ def login():
 
 @app.route('/')
 def root():
-    items = Item.query.all()
-    return render_template('index.html', items=items)
-
-@app.route('/items', methods=['POST'])
-def add_item():
-    content = request.get_json()
-    print(content)
-    name = content['name']
-    code= content['barcode']
-    description= content['description']
-    try:
-        i = Item(name, code, description)
-        db.session.add(i)
-        db.session.commit()
-    except Exception as e:
-        print("An exception occurred while attempting to add an item: {0}".format(e))
-    return '', 200
+    return render_template('index.html')

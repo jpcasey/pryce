@@ -1,17 +1,17 @@
-"""empty message
+"""Initial migration
 
-Revision ID: caece2486c45
+Revision ID: 7bc6eb79e09b
 Revises: 
-Create Date: 2020-01-26 17:28:40.650211
+Create Date: 2020-01-30 16:28:46.130563
 
 """
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
-from sqlalchemy.schema import FetchedValue
+from sqlalchemy.schema import FetchedValue 
 
 # revision identifiers, used by Alembic.
-revision = 'caece2486c45'
+revision = '7bc6eb79e09b'
 down_revision = None
 branch_labels = None
 depends_on = None

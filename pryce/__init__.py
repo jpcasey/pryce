@@ -27,7 +27,12 @@ def add_item():
     content = request.get_json()
     print(content)
     name = content['name']
-    barcode= content['barcode']
-    db.session.add(Item(name, barcode))
-    db.session.commit()
+    code= content['barcode']
+    description= content['description']
+    try:
+        i = Item(name, code, description)
+        db.session.add(i)
+        db.session.commit()
+    except Exception as e:
+        print("An exception occurred while attempting to add an item: {0}".format(e))
     return '', 200

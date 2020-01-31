@@ -20,7 +20,8 @@ def login():
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    items = Item.query.all()
+    return render_template('index.html', items=items)
 
 @app.route('/items', methods=['POST'])
 def add_item():

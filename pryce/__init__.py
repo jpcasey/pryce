@@ -20,7 +20,8 @@ def login():
 
 @app.route('/')
 def root():
-    return render_template('index.html')
+    items = Item.query.all()
+    return render_template('index.html', items=items)
 
 @app.route('/items', methods=['POST'])
 def add_item():
@@ -28,6 +29,9 @@ def add_item():
     print(content)
     name = content['name']
     barcode= content['barcode']
-    db.session.add(Item(name, barcode))
+    brand = content['brand']
+    weight = content['weight']
+    description = content['description']
+    db.session.add(Item(code=barcode, name=name, brand=brand, weight=weight, description=description))
     db.session.commit()
     return '', 200

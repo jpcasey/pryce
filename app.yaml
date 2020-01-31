@@ -15,4 +15,4 @@ handlers:
 
   # should encrypt these later
 env_variables:
-  SQLALCHEMY_DATABASE_URI: postgres+pg8000://postgres:rnYs8GThytvG8auG@/pryce_db?unix_sock=/cloudsql/pryce-cs467:us-central1:pryce-postgres/.s.PGSQL.5432
+  FLASK_APP: pryce 

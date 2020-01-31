@@ -85,11 +85,16 @@ class Image(db.Model):
 class Item(db.Model):
     __tablename__ = 'item'
 
+    def __init__(self, code, name, desc):
+        self.code = code
+        self.name = name
+        self.description = desc
+
     item_id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String, nullable=False, unique=True)
     name = db.Column(db.String, nullable=False)
     brand = db.Column(db.String)
-    weight = db.Column(db.Numeric, nullable=False)
+    weight = db.Column(db.Numeric, nullable=True)
     weight_unit = db.Column(db.String, server_default=db.FetchedValue())
     image_id = db.Column(db.ForeignKey('image.image_id', ondelete='RESTRICT', onupdate='CASCADE'))
     description = db.Column(db.Text, nullable=False)

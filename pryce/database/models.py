@@ -139,8 +139,8 @@ class Price(db.Model):
     currency = db.Column(db.String(3))
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'))
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    price = db.Column(db.Numeric)
-    reported = db.Column(db.DateTime(True), default=datetime.utcnow)
+    price = db.Column(db.Numeric(12,3))
+    reported = db.Column(db.DateTime(True), nullable=False)
     store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'))
 
     appuser = db.relationship('Appuser', primaryjoin='Price.appuser_id == Appuser.appuser_id', backref='prices')

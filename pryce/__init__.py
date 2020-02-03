@@ -3,10 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from pryce.config import Config
 from flask_marshmallow import Marshmallow
+import os
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+print(os.getcwd())
 migrate = Migrate(app, db)
 ma = Marshmallow(app)
 

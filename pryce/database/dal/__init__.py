@@ -1,4 +1,4 @@
+from pryce import db
 
-__all__ = ["user", "testobj"]
+__all__ = ["user", "item"]
 
-testobj = object()

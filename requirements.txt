@@ -6,3 +6,6 @@ psycopg2-binary==2.8.4
 gunicorn
 flask_migrate
 google-cloud-datastore
+simplejson
+flask-marshmallow
+marshmallow-sqlalchemy

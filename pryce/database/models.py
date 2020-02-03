@@ -2,8 +2,8 @@
 from sqlalchemy import BigInteger, CheckConstraint, Column, DateTime, Float, ForeignKey, Integer, Numeric, String, Table, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import FetchedValue
-from sqlalchemy.dialects.postgresql.base import MONEY
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 from .. import db
 
@@ -85,11 +85,6 @@ class Image(db.Model):
 class Item(db.Model):
     __tablename__ = 'item'
 
-    def __init__(self, code, name, desc):
-        self.code = code
-        self.name = name
-        self.description = desc
-
     item_id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String, nullable=False, unique=True)
     name = db.Column(db.String, nullable=False)
@@ -144,8 +139,8 @@ class Price(db.Model):
     currency = db.Column(db.String(3))
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'))
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    price = db.Column(MONEY)
-    reported = db.Column(db.DateTime(True))
+    price = db.Column(db.Numeric)
+    reported = db.Column(db.DateTime(True), default=datetime.utcnow)
     store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'))
 
     appuser = db.relationship('Appuser', primaryjoin='Price.appuser_id == Appuser.appuser_id', backref='prices')

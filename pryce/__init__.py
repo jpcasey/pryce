@@ -2,13 +2,22 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from pryce.config import Config
+from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+ma = Marshmallow(app)
 
 from pryce.database.models import *
+import pryce.controllers.items as items_controller
+import pryce.controllers.stores as stores_controller
+
+# don't require trailing slash after endpoints
+app.url_map.strict_slashes = False
+app.register_blueprint(items_controller.bp)
+app.register_blueprint(stores_controller.bp)
 
 @app.route('/login')
 def login():
@@ -22,18 +31,3 @@ def login():
 def root():
     items = Item.query.all()
     return render_template('index.html', items=items)
-
-@app.route('/items', methods=['POST'])
-def add_item():
-    content = request.get_json()
-    print(content)
-    name = content['name']
-    code= content['barcode']
-    description= content['description']
-    try:
-        i = Item(name, code, description)
-        db.session.add(i)
-        db.session.commit()
-    except Exception as e:
-        print("An exception occurred while attempting to add an item: {0}".format(e))
-    return '', 200

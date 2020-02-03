@@ -14,6 +14,7 @@ class StoreSchema(ma.ModelSchema):
     class Meta:
         json_module = simplejson
         model = Store
+        exclude = ["prices"]
 
 class PriceSchema(ma.ModelSchema):
     class Meta:

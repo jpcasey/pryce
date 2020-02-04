@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
 from pryce.database.models import Store, Item, Price
 from pryce.database.schemas import StoreSchema, ItemSchema, PriceSchema
-from pryce import db
+from pryce import db, app
+import requests
 
 bp = Blueprint('stores', __name__, url_prefix='/stores')
 store_schema = StoreSchema()
@@ -28,6 +29,17 @@ def add_store():
     db.session.add(store)
     db.session.commit()
     return store_schema.jsonify(store)
+
+# /find - GET
+# Returns a list of stores in the system.
+# todo: allow filtering using query parameters (e.g. name, location).
+@bp.route('/find', methods=['GET'])
+def find_stores():
+    lat = request.args.get('lat')
+    lng = request.args.get('long')
+    uri = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={app.config["GOOGLE_API_KEY"]}&location={lat},{lng}&type=store&rankby=distance'
+    stores = requests.get(uri)
+    return stores.json()
 
 # /<store_id> - GET
 # Returns information for a specific store.
@@ -125,3 +137,4 @@ def add_store_item(store_id, item_id):
 
 # /<store_id>/items/<item_id>/comments/<comment_id> - DELETE
 # Deletes a comment and rating for a specific item at a specific store.
+

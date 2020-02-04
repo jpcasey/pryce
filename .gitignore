@@ -1,3 +1,4 @@
+*.sh
 *.swo
 *.swp
 *.test
@@ -77,6 +78,10 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# PyCharm
+.idea
+.idea/
 
 # pyenv
 .python-version

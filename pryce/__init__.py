@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+#from flask_sqlalchemy import SQLAlchemy
+from pryce.database.dal.user import DALUser as daluser
 from pryce.config import Config
 from flask_marshmallow import Marshmallow
 import os
@@ -8,9 +8,8 @@ import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
-print(os.getcwd())
-migrate = Migrate(app, db)
+#db = SQLAlchemy(app)
+#migrate = Migrate(app, db)
 ma = Marshmallow(app)
 
 from pryce.database.models import *
@@ -25,8 +24,7 @@ app.register_blueprint(stores_controller.bp)
 @app.route('/login')
 def login():
     usr = Appuser(username='testing3')
-    db.session.add(usr)
-    db.session.commit()
+    daluser.user_add(usr)
     #return render_template('login.html')
     return "Looks good"
 

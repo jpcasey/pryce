@@ -30,6 +30,7 @@ def add_item():
     db.session.commit()
     return item_schema.jsonify(item)
 
+'''
 # /<item_id> - GET
 # Returns information for a specific item.
 @bp.route('/<item_id>', methods=['GET'])
@@ -77,3 +78,5 @@ def get_item_prices(item_id):
         return jsonify(message = 'Item not found.'), 404
     price_schema = PriceSchema()
     return price_schema.jsonify(prices, many=True)
+
+    '''

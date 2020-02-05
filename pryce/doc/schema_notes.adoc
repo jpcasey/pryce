@@ -1,0 +1,16 @@
+### Item
+#### code
+Type: string/varchar +
+Description: EAN-13 barcode, zero-padded if necessary.
+
+#### quantity
+Type: numeric/float/rational
+Description: a number indicating the quantity of units that the product contains +
+
+#### quant_unit
+Type: string/varchar
+Description: one of a restricted number of abbreviations listed in IEEE Std 260.1-2004 and NIST SP 1020-3 +
+
+#### image
+Type: string/varchar
+Description: A path adhering to RFC 3986

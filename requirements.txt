@@ -9,3 +9,4 @@ google-cloud-datastore
 simplejson
 flask-marshmallow
 marshmallow-sqlalchemy
+flask-jwt-extended

@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request
 #from flask_sqlalchemy import SQLAlchemy
-from pryce.database.dal.user import DALUser as daluser
+#from pryce.database.dal.user import DALUser as daluser
 from pryce.config import Config
 from flask_marshmallow import Marshmallow
-import os
+#import os
 
 
 app = Flask(__name__)
@@ -21,6 +21,7 @@ app.url_map.strict_slashes = False
 app.register_blueprint(items_controller.bp)
 app.register_blueprint(stores_controller.bp)
 
+'''
 @app.route('/login')
 def login():
     usr = Appuser(username='testing3')
@@ -32,3 +33,5 @@ def login():
 def root():
     items = Item.query.all()
     return render_template('index.html', items=items)
+    
+    '''

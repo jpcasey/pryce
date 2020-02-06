@@ -9,16 +9,13 @@ class Acces(db.Model):
 
 class Appuser(db.Model):
     __tablename__ = 'appuser'
-
     appuser_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password = db.Column(db.String)
     home = db.Column(db.ForeignKey('location.location_id', ondelete='RESTRICT', onupdate='CASCADE'))
     karma = db.Column(db.Integer)
-    #avatar = db.Column(db.ForeignKey('image.image_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    #image = db.relationship('Image', primaryjoin='Appuser.avatar == Image.image_id', backref='appusers')
     image = db.Column(db.String)
-    location = db.relationship('Location', primaryjoin='Appuser.home == Location.location_id', backref='appusers')
+    home = db.Column(db.String)
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
 
@@ -59,16 +56,6 @@ class Comment(db.Model):
 
     appuser = db.relationship('Appuser', primaryjoin='Comment.appuser_id == Appuser.appuser_id', backref='comments')
 
-'''
-class Image(db.Model):
-    __tablename__ = 'image'
-
-    image_id = db.Column(db.Integer, primary_key=True)
-    uri = db.Column(db.String, unique=True)
-    imgtype = db.Column(db.String)
-    width = db.Column(db.Integer)
-    height = db.Column(db.Integer)
-'''
 
 class Item(db.Model):
     __tablename__ = 'item'
@@ -79,10 +66,8 @@ class Item(db.Model):
     brand = db.Column(db.String)
     quantity = db.Column(db.Numeric, nullable=True)
     quant_unit = db.Column(db.String, server_default=db.FetchedValue())
-    #image_id = db.Column(db.ForeignKey('image.image_id', ondelete='RESTRICT', onupdate='CASCADE'))
     description = db.Column(db.Text, nullable=False)
     image = db.Column(db.String)
-    #image = db.relationship('Image', primaryjoin='Item.image_id == Image.image_id', backref='items')
 
 
 class List(db.Model):
@@ -110,17 +95,8 @@ class ListItem(db.Model):
     list1 = db.relationship('List', primaryjoin='ListItem.list_id == List.list_id', backref='list_list_items_0')
 
 
-class Location(db.Model):
-    __tablename__ = 'location'
-
-    location_id = db.Column(db.Integer, primary_key=True)
-    lat = db.Column(db.Float)
-    long = db.Column(db.Float)
-
-
 class Price(db.Model):
     __tablename__ = 'price'
-
     price_id = db.Column(db.Integer, primary_key=True)
     currency = db.Column(db.String(3))
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'))
@@ -128,7 +104,6 @@ class Price(db.Model):
     price = db.Column(db.Numeric(12, 3))
     reported = db.Column(db.DateTime(True), nullable=False)
     store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'))
-
     appuser = db.relationship('Appuser', primaryjoin='Price.appuser_id == Appuser.appuser_id', backref='prices')
     item = db.relationship('Item', primaryjoin='Price.item_id == Item.item_id', backref='prices')
     store = db.relationship('Store', primaryjoin='Price.store_id == Store.store_id', backref='prices')
@@ -137,12 +112,10 @@ class Price(db.Model):
 class Store(db.Model):
     __tablename__ = 'store'
     store_id = db.Column(db.Integer, primary_key=True)
-    location_id = db.Column(db.ForeignKey('location.location_id', ondelete='RESTRICT', onupdate='CASCADE'))
+    place_id = db.Column(db.String, nullable=False)
+    address = db.Column(db.String)
     chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
     name = db.Column(db.String)
-    #image_id = db.Column(db.ForeignKey('image.image_id', ondelete='RESTRICT', onupdate='CASCADE'))
     image = db.Column(db.String)
     chain = db.relationship('Chain', primaryjoin='Store.chain_id == Chain.chain_id', backref='stores')
-    #image = db.relationship('Image', primaryjoin='Store.image_id == Image.image_id', backref='stores')
-    location = db.relationship('Location', primaryjoin='Store.location_id == Location.location_id', backref='stores')
 

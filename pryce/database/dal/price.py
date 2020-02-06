@@ -8,3 +8,6 @@ class DALPrice():
       prices = None
       prices = Price.query.filter_by(item_id=item_id).order_by(Price.reported.desc()).all()
       return prices
+
+   def add_price(self, price):
+      pass

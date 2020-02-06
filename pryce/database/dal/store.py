@@ -14,6 +14,10 @@ class DALStore():
         db.session.add(store)
         db.session.commit()
 
+    def delete_store(self, store):
+        db.session.delete(store)
+        db.session.commit()
+
     def update_store(self, store_dict):
         store = None
         plid = store_dict['place_id']

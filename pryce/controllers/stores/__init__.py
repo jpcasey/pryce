@@ -1,6 +1,8 @@
-from flask import Blueprint, request, jsonify
+import requests
+from flask import Blueprint, request, jsonify, current_app
 from pryce.database.models import Store, Item, Price
 from pryce.database.schemas import StoreSchema, ItemSchema, PriceSchema
+from pryce.database.dal.price import DALPrice as dalprice
 from pryce.database.dal.store import DALStore as dalstore
 
 bp = Blueprint('stores', __name__, url_prefix='/stores')
@@ -32,8 +34,8 @@ def add_store():
 def find_stores():
     lat = request.args.get('lat')
     lng = request.args.get('long')
-    uri = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={app.config["GOOGLE_API_KEY"]}&location={lat},{lng}&type=store&rankby=distance'
-    stores = request.get(uri)
+    uri = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={current_app.config["GOOGLE_API_KEY"]}&location={lat},{lng}&type=store&rankby=distance'
+    stores = requests.get(uri)
     return stores.json()
 
 # /<store_id> - GET
@@ -64,8 +66,7 @@ def delete_store(store_id):
     store = Store.query.filter_by(store_id=store_id).first()
     if store == None:
         return jsonify(message = 'Store not found'), 404
-    db.session.delete(store)
-    db.session.commit()
+    dalstore.delete_store(store)
     message = f'Successfully deleted "{store.name}"'
     return jsonify(message = message)
 
@@ -107,8 +108,7 @@ def add_store_item(store_id, item_id):
     price = req_body.get('price')
     currency = req_body.get('currency', 'USD')
     item_price = Price(currency=currency, item_id=item_id, price=price, store_id=store_id)
-    db.session.add(item_price)
-    db.session.commit()
+    dalprice.add(item_price)
     return price_schema.jsonify(item_price)
 
 # /<store_id>/items/<item_id> - PUT

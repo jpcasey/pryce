@@ -2,7 +2,7 @@ from pryce.database import models
 from pryce import *
 
 class TestDALUser:
-    def test_add_user():
+    def test_add_user(self):
         return True
 
 

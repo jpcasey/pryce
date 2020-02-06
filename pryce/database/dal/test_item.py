@@ -10,7 +10,7 @@ from pryce.database.dal import test_db_cfg
 class TestDALItem(unittest.TestCase):
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(self, cls):
         # TestDALItem.app = Flask(__name__)
         app.config.from_object(test_db_cfg)
 

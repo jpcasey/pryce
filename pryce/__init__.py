@@ -43,14 +43,12 @@ def login():
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200
 
-
 # route that is restricted to anyone with a JWT
 @app.route('/protected', methods=['GET'])
 @jwt_required
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user, message="Hello from a protected route!"), 200
-
 
 # route that only logged in, authorized users can see
 @app.route('/user2', methods=['GET'])

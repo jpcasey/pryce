@@ -20,6 +20,13 @@ class Config(object):
         if os.getenv('FLASK_ENV') == 'development':
             logging.debug("csql_connection_string: " + csql_connection_string)
         SQLALCHEMY_DATABASE_URI = csql_connection_string
+
+        # get our google maps api & JWT secret keys
+        query = client.query(kind='api_key')
+        result = list(query.fetch())
+        GOOGLE_API_KEY = result[0]['google']
+        JWT_SECRET_KEY = result[0]['JWT_SECRET_KEY']
     else:
         SQLALCHEMY_DATABASE_URI = os.environ.get('SQLALCHEMY_DATABASE_URI')
-
+        GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+        JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')

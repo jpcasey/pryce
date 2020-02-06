@@ -45,13 +45,12 @@ def get_item(code):
 
 # /<item_id> - PUT
 # Update information for a specific item.
-@bp.route('/<item_id>', methods=['PUT'])
-def update_item(item_id):
+@bp.route('/<code>', methods=['PUT'])
+def update_item(code):
     json_dict = request.get_json()
-    json_dict['item_id'] = item_id
     item = dalitem.update_item(json_dict)
     if item is None:
-        return jsonify(message = 'Item not found'), 404
+        return jsonify(message='Item not found'), 404
     return item_schema.jsonify(item)
 
 # /<item_id> - DELETE

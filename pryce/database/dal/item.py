@@ -13,6 +13,7 @@ class DALItem:
     def add_item(self, item):
         db.session.add(item)
         db.session.commit()
+        return item
 
     def get_item(self, code):
         try:
@@ -21,10 +22,22 @@ class DALItem:
             raise MultipleResultsFound
         return item
 
+    '''
+    def get_items(self, ? ):
+        items = Item.query.filter_by(?)
+        return items
+    '''
+
     def update_item(self, item_dict):
-        item = Item.query.filter_by(item_id=item_dict['item_id']).first()
-        item.update(item_dict, synchronize_session=False)
-        db.session.commit()
+        item = None
+        code = item_dict['code']
+        try:
+            item = Item.query.filter_by(code=code).one()
+            item.update(item_dict)
+            db.session.commit()
+        except NoResultFound as nrf:
+            pass
+        return item
 
     def delete_item(self, item_id):
         try:

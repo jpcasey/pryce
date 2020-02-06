@@ -36,14 +36,14 @@ def get_store(store_id):
 
 # /<store_id> - PUT
 # Update information for a specific store.
-@bp.route('/<store_id>', methods=['PUT'])
+@bp.route('/<place_id>', methods=['PUT'])
 def update_store(store_id):
     store = Store.query.filter_by(store_id=store_id).first()
     if store == None:
         return jsonify(message = 'Item not found'), 404
     req_body = request.get_json()
-    store.name = req_body.get('name', store.name)
-    db.session.commit()
+    store.update(req_body)
+    store = dalstore.update_store(store)
     return store_schema.jsonify(store)
 
 # /<store_id> - DELETE

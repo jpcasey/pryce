@@ -9,8 +9,19 @@ class DALStore():
         return stores
 
     def add_store(self, store_dict):
-        Store.up
-        store = Store(name=name)
+        store = Store()
+        store.update(store_dict)
         db.session.add(store)
         db.session.commit()
+
+    def update_store(self, store_dict):
+        store = None
+        plid = store_dict['place_id']
+        try:
+            store = Store.query.filter_by(place_id=plid).one()
+            store.update(store_dict)
+            db.session.commit()
+        except NoResultFound as nrf:
+            pass
+        return store
 

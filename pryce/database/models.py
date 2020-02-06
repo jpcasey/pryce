@@ -1,13 +1,19 @@
 from pryce.database.dal import db
 
 
+class PryceModel:
+    def update(self, values):
+        for k, v in values.items():
+            setattr(self, k, v)
+
+
 class Acces(db.Model):
     __tablename__ = 'access'
 
     access_id = db.Column(db.Integer, primary_key=True)
 
 
-class Appuser(db.Model):
+class Appuser(PryceModel, db.Model):
     __tablename__ = 'appuser'
     appuser_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
@@ -57,7 +63,7 @@ class Comment(db.Model):
     appuser = db.relationship('Appuser', primaryjoin='Comment.appuser_id == Appuser.appuser_id', backref='comments')
 
 
-class Item(db.Model):
+class Item(PryceModel, db.Model):
     __tablename__ = 'item'
 
     item_id = db.Column(db.Integer, primary_key=True)
@@ -70,7 +76,7 @@ class Item(db.Model):
     image = db.Column(db.String)
 
 
-class List(db.Model):
+class List(PryceModel, db.Model):
     __tablename__ = 'list'
 
     list_id = db.Column(db.Integer, primary_key=True)
@@ -95,7 +101,7 @@ class ListItem(db.Model):
     list1 = db.relationship('List', primaryjoin='ListItem.list_id == List.list_id', backref='list_list_items_0')
 
 
-class Price(db.Model):
+class Price(PryceModel, db.Model):
     __tablename__ = 'price'
     price_id = db.Column(db.Integer, primary_key=True)
     currency = db.Column(db.String(3))
@@ -109,10 +115,10 @@ class Price(db.Model):
     store = db.relationship('Store', primaryjoin='Price.store_id == Store.store_id', backref='prices')
 
 
-class Store(db.Model):
+class Store(PryceModel, db.Model):
     __tablename__ = 'store'
     store_id = db.Column(db.Integer, primary_key=True)
-    place_id = db.Column(db.String, nullable=False)
+    place_id = db.Column(db.String, unique=True, nullable=False)
     address = db.Column(db.String)
     chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
     name = db.Column(db.String)

@@ -8,4 +8,5 @@ flask_migrate
 google-cloud-datastore
 simplejson
 flask-marshmallow
+flask-jwt-extended
 marshmallow-sqlalchemy

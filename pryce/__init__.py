@@ -1,19 +1,14 @@
-from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask import Flask, request, jsonify
 from pryce.config import Config
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 app = Flask(__name__)
 app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 ma = Marshmallow(app)
 
 jwt = JWTManager(app)
 
-from pryce.database.models import *
 import pryce.controllers.items as items_controller
 import pryce.controllers.stores as stores_controller
 
@@ -22,10 +17,6 @@ app.url_map.strict_slashes = False
 app.register_blueprint(items_controller.bp)
 app.register_blueprint(stores_controller.bp)
 
-@app.route('/')
-def root():
-    items = Item.query.all()
-    return render_template('index.html', items=items)
 
 # route to authenticate users and create & provide access tokens.
 @app.route('/login', methods=['POST'])

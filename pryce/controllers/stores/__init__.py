@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
 from pryce.database.models import Store, Item, Price
 from pryce.database.schemas import StoreSchema, ItemSchema, PriceSchema
-from pryce import db, app
-import requests
+from pryce.database.dal.store import DALStore as dalstore
 
 bp = Blueprint('stores', __name__, url_prefix='/stores')
 store_schema = StoreSchema()
@@ -13,7 +12,7 @@ price_schema = PriceSchema()
 # todo: allow filtering using query parameters (e.g. name, location).
 @bp.route('/', methods=['GET'])
 def get_stores():
-    stores = Store.query.all()
+    stores = dalstore.get()
     return store_schema.jsonify(stores, many=True)
 
 # /- POST
@@ -23,11 +22,7 @@ def add_store():
     req_body = request.get_json()
     if 'name' not in req_body:
         return jsonify(message='Name is a required attribute'), 400
-    name = req_body.get('name')
-    message = f'Successfully added store {name}'
-    store = Store(name=name)
-    db.session.add(store)
-    db.session.commit()
+    store = dalstore.add_store(req_body)
     return store_schema.jsonify(store)
 
 # /find - GET
@@ -52,14 +47,14 @@ def get_store(store_id):
 
 # /<store_id> - PUT
 # Update information for a specific store.
-@bp.route('/<store_id>', methods=['PUT'])
+@bp.route('/<place_id>', methods=['PUT'])
 def update_store(store_id):
     store = Store.query.filter_by(store_id=store_id).first()
     if store == None:
         return jsonify(message = 'Item not found'), 404
     req_body = request.get_json()
-    store.name = req_body.get('name', store.name)
-    db.session.commit()
+    store.update(req_body)
+    store = dalstore.update_store(store)
     return store_schema.jsonify(store)
 
 # /<store_id> - DELETE

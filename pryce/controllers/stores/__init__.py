@@ -33,7 +33,7 @@ def find_stores():
     lat = request.args.get('lat')
     lng = request.args.get('long')
     uri = f'https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={app.config["GOOGLE_API_KEY"]}&location={lat},{lng}&type=store&rankby=distance'
-    stores = requests.get(uri)
+    stores = request.get(uri)
     return stores.json()
 
 # /<store_id> - GET

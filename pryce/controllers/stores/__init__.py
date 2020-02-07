@@ -2,12 +2,14 @@ import requests
 from flask import Blueprint, request, jsonify, current_app
 from pryce.database.models import Store, Item, Price
 from pryce.database.schemas import StoreSchema, ItemSchema, PriceSchema
-from pryce.database.dal.price import DALPrice as dalprice
-from pryce.database.dal.store import DALStore as dalstore
+from pryce.database.dal.price import DALPrice
+from pryce.database.dal.store import DALStore
 
 bp = Blueprint('stores', __name__, url_prefix='/stores')
 store_schema = StoreSchema()
 price_schema = PriceSchema()
+dalprice = DALPrice()
+dalstore = DALStore()
 
 # / - GET
 # Returns a list of stores in the system.

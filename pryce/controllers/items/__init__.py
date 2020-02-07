@@ -1,11 +1,13 @@
 from flask import Blueprint, request, jsonify
 from pryce.database.models import Item, Price
 from pryce.database.schemas import ItemSchema, PriceSchema
-from pryce.database.dal.item import DALItem as dalitem
-from pryce.database.dal.price import DALPrice as dalprice
+from pryce.database.dal.item import DALItem
+from pryce.database.dal.price import DALPrice
 
 bp = Blueprint('items', __name__, url_prefix='/items')
 item_schema = ItemSchema()
+dalitem = DALItem()
+dalprice = DALPrice()
 
 # / - GET
 # Returns a list of items in the system.  Can be filtered using query parameters (e.g. name, brand)
@@ -26,9 +28,10 @@ def add_item():
     name = req_body.get('name')
     code = req_body.get('code')
     brand = req_body.get('brand', None)
-    weight = req_body.get('weight', 0)
+    quantity = req_body.get('quantity', None)
+    quant_unit = req_body.get('quant_unit', None)
     description = req_body.get('description', '')
-    item = Item(name=name, brand=brand, code=code, weight=weight, description=description)
+    item = Item(name=name, brand=brand, code=code, quantity=quantity, quant_unit=quant_unit, description=description)
     dalitem.add_item(item)
     return item_schema.jsonify(item)
 

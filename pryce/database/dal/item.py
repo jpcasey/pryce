@@ -4,6 +4,7 @@ from pryce.database.dal import db
 from pryce.database.models import Item
 
 
+# noinspection PyMethodMayBeStatic
 class DALItem:
 
     def get_items(self):
@@ -13,20 +14,15 @@ class DALItem:
     def add_item(self, item):
         db.session.add(item)
         db.session.commit()
-        return item
+        return item.item_id
 
     def get_item(self, code):
+        item = None
         try:
             item = Item.query.filter_by(code=code).one()
         except MultipleResultsFound as mrf:
             raise MultipleResultsFound
         return item
-
-    '''
-    def get_items(self, ? ):
-        items = Item.query.filter_by(?)
-        return items
-    '''
 
     def update_item(self, item_dict):
         item = None

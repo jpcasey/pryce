@@ -18,10 +18,9 @@ class Appuser(PryceModel, db.Model):
     appuser_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password = db.Column(db.String)
-    home = db.Column(db.ForeignKey('location.location_id', ondelete='RESTRICT', onupdate='CASCADE'))
     karma = db.Column(db.Integer)
     image = db.Column(db.String)
-    home = db.Column(db.String)
+    home = db.Column(db.String(255))
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
 
@@ -72,7 +71,7 @@ class Item(PryceModel, db.Model):
     brand = db.Column(db.String)
     quantity = db.Column(db.Numeric, nullable=True)
     quant_unit = db.Column(db.String, server_default=db.FetchedValue())
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
     image = db.Column(db.String)
 
 

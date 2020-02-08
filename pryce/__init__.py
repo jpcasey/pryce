@@ -1,12 +1,9 @@
 from flask import Flask, request, jsonify
 from pryce.config import Config
-from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
 app = Flask(__name__)
 app.config.from_object(Config)
-ma = Marshmallow(app)
-
 jwt = JWTManager(app)
 
 import pryce.controllers.items as items_controller

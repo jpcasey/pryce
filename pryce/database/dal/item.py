@@ -16,11 +16,7 @@ class DALItem:
         return item
 
     def get_item(self, code):
-        try:
-            item = Item.query.filter_by(code=code).one()
-        except MultipleResultsFound as mrf:
-            raise MultipleResultsFound
-        return item
+        return Item.query.filter_by(code=code).first()
 
     '''
     def get_items(self, ? ):
@@ -39,9 +35,9 @@ class DALItem:
             pass
         return item
 
-    def delete_item(self, item_id):
+    def delete_item(self, code):
         try:
-            item = Item.query.filter_by(item_id=item_id).one()
+            item = Item.query.filter_by(code=code).one()
             db.session.delete(item)
             db.session.commit()
         except NoResultFound as nrf:

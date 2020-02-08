@@ -13,6 +13,11 @@ class DALStore():
         store.update(store_dict)
         db.session.add(store)
         db.session.commit()
+        return store
+    
+    def get_store_by_place_id(self, place_id):
+        store = Store.query.filter_by(place_id=place_id).first()
+        return store
 
     def delete_store(self, store):
         db.session.delete(store)

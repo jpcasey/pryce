@@ -28,10 +28,8 @@ class DALStore():
     def update_store(self, store_dict):
         store = None
         plid = store_dict['place_id']
-        try:
-            store = Store.query.filter_by(place_id=plid).one()
+        store = Store.query.filter_by(place_id=plid).first()
+        if store is not None:
             store.update(store_dict)
             db.session.commit()
-        except NoResultFound as nrf:
-            pass
         return store

@@ -7,6 +7,9 @@ from pryce.database.dal import test_db_cfg
 
 
 # noinspection PyArgumentList
+from sqlalchemy.exc import IntegrityError
+
+
 class TestDALItem(unittest.TestCase):
 
     fud = Item(code='0012345679011', brand='Foo', name='Bar Baz', quantity=0.1,
@@ -62,9 +65,14 @@ class TestDALItem(unittest.TestCase):
         self.assertCountEqual(il, self.item_list)
 
     def test_add_item(self):
-        fud_added = self.dalitem.add_item(TestDALItem.fud)
-        self.assertIsNotNone(fud_added)
-        self.assertEqual(fud_added, 6)
+        item = self.dalitem.add_item(TestDALItem.fud)
+        self.assertIsNotNone(item)
+        self.assertEqual(item.item_id, 6)
+
+    def test_add_bad_item(self):
+        item = Item(description="Foo")
+        item = self.dalitem.add_item(item)
+        self.assertIsNone(item)
 
     def test_get_item(self):
         i = self.dalitem.get_item("0000000959742")
@@ -79,12 +87,8 @@ class TestDALItem(unittest.TestCase):
         self.assertEqual(item.quant_unit, 'gal')
 
     def test_delete_item(self):
-        book_id = self.dalitem.add_item(TestDALItem.book)
-        self.assertGreater(book_id, 0)
-        item = self.dalitem.get_item(TestDALItem.book.code)
-        self.assertTrue(self.dalitem.delete_item(item))
+        item = self.dalitem.add_item(TestDALItem.book)
+        self.assertEqual(self.dalitem.delete_item(item.code), 1)
         item2 = self.dalitem.get_item(item.code)
         self.assertIsNone(item2)
 
-if __name__ == '__main__':
-    pass

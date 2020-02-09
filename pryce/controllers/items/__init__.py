@@ -9,6 +9,16 @@ item_schema = ItemSchema()
 dalitem = DALItem()
 dalprice = DALPrice()
 
+# takes a json object and returns an Item model object
+def create_item(item_json):
+    name = item_json.get('name')
+    code = item_json.get('code')
+    brand = item_json.get('brand', None)
+    quantity = item_json.get('quantity', None)
+    quant_unit = item_json.get('quant_unit', None)
+    description = item_json.get('description', '')
+    return Item(name=name, brand=brand, code=code, quantity=quantity, quant_unit=quant_unit, description=description)
+
 # / - GET
 # Returns a list of items in the system.  Can be filtered using query parameters (e.g. name, brand)
 @bp.route('/', methods=['GET'])
@@ -25,13 +35,7 @@ def add_item():
         return jsonify(message='Name and brand are required attributes.'), 400
     # other options here would be handing the DAL the json dict (see update_item)
     # or deserializing to an SQLA object via marshmallow and passing that in
-    name = req_body.get('name')
-    code = req_body.get('code')
-    brand = req_body.get('brand', None)
-    quantity = req_body.get('quantity', None)
-    quant_unit = req_body.get('quant_unit', None)
-    description = req_body.get('description', '')
-    item = Item(name=name, brand=brand, code=code, quantity=quantity, quant_unit=quant_unit, description=description)
+    item = create_item(req_body)
     dalitem.add_item(item)
     return item_schema.jsonify(item)
 
@@ -58,12 +62,10 @@ def update_item(code):
 
 # /<item_id> - DELETE
 # Deletes an item from the system.
-@bp.route('/<item_id>', methods=['DELETE'])
-def delete_item(item_id):
-    try:
-        dalitem.delete_item(item_id)
-    # ideally there'd be controller-specific exception caught here
-    except Exception as e:
+@bp.route('/<code>', methods=['DELETE'])
+def delete_item(code):
+    row_cnt = dalitem.delete_item(code)
+    if row_cnt == 0:
         return jsonify(message='Item not found'), 404
     message = f'Success'
     return jsonify(message=message)
@@ -72,9 +74,9 @@ def delete_item(item_id):
 # Returns store & price information for a specific item.
 # todo: handle appropriate query parameters (e.g. store, location, price, date last verified).
 # todo: currently returns all prices. should group prices by store and only show the most recent for each store
-@bp.route('/<item_id>/prices', methods=['GET'])
-def get_item_prices(item_id):
-    prices = dalprice.get_item_prices(item_id)
+@bp.route('/<code>/prices', methods=['GET'])
+def get_item_prices(code):
+    prices = dalprice.get_item_prices(code)
     if prices == None:
         return jsonify(message = 'Item not found.'), 404
     price_schema = PriceSchema()

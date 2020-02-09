@@ -21,4 +21,4 @@ class PriceSchema(ma.ModelSchema):
         json_module = simplejson
         model = Price
     item = fields.Nested(ItemSchema(only=("item_id", "brand", "name", "code")))
-    store = fields.Nested(StoreSchema(only=("store_id", "name")))
+    store = fields.Nested(StoreSchema(only=("store_id", "name", "place_id")))

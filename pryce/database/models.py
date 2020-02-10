@@ -110,7 +110,8 @@ class Store(PryceModel, db.Model):
     name = db.Column(db.String)
     image = db.Column(db.String)
     chain = db.relationship('Chain', primaryjoin='Store.chain_id == Chain.chain_id', backref='stores')
-    reported = db.Column(db.DateTime(True), nullable=False)
+    #TODO should be not nullable reported = db.Column(db.DateTime(True), nullable=False)
+    reported = db.Column(db.DateTime(True))
 
 
 class Price(PryceModel, db.Model):

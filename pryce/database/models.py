@@ -9,7 +9,6 @@ class PryceModel:
 
 class Acces(db.Model):
     __tablename__ = 'access'
-
     access_id = db.Column(db.Integer, primary_key=True)
 
 
@@ -18,10 +17,10 @@ class Appuser(PryceModel, db.Model):
     appuser_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password = db.Column(db.String)
-    home = db.Column(db.ForeignKey('location.location_id', ondelete='RESTRICT', onupdate='CASCADE'))
     karma = db.Column(db.Integer)
     image = db.Column(db.String)
-    home = db.Column(db.String)
+    lat = db.Column(db.Numeric(17, 15))
+    lng = db.Column(db.Numeric(17, 15))
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
 
@@ -44,7 +43,6 @@ t_badge_appuser = db.Table(
 
 class Chain(db.Model):
     __tablename__ = 'chain'
-
     chain_id = db.Column(db.Integer, primary_key=True)
 
 
@@ -72,7 +70,7 @@ class Item(PryceModel, db.Model):
     brand = db.Column(db.String)
     quantity = db.Column(db.Numeric, nullable=True)
     quant_unit = db.Column(db.String, server_default=db.FetchedValue())
-    description = db.Column(db.Text, nullable=False)
+    description = db.Column(db.Text, nullable=True)
     image = db.Column(db.String)
 
 
@@ -119,9 +117,12 @@ class Store(PryceModel, db.Model):
     __tablename__ = 'store'
     store_id = db.Column(db.Integer, primary_key=True)
     place_id = db.Column(db.String, unique=True, nullable=False)
+    lat = db.Column(db.Numeric(17, 15))
+    lng = db.Column(db.Numeric(17, 15))
     address = db.Column(db.String)
     chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
     name = db.Column(db.String)
     image = db.Column(db.String)
     chain = db.relationship('Chain', primaryjoin='Store.chain_id == Chain.chain_id', backref='stores')
+    reported = db.Column(db.DateTime(True), nullable=False)
 

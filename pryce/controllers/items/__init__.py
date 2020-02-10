@@ -64,10 +64,8 @@ def update_item(code):
 # Deletes an item from the system.
 @bp.route('/<code>', methods=['DELETE'])
 def delete_item(code):
-    try:
-        dalitem.delete_item(code)
-    # ideally there'd be controller-specific exception caught here
-    except Exception as e:
+    row_cnt = dalitem.delete_item(code)
+    if row_cnt == 0:
         return jsonify(message='Item not found'), 404
     message = f'Success'
     return jsonify(message=message)

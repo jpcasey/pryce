@@ -26,7 +26,7 @@ def add_store():
     req_body = request.get_json()
     if 'name' not in req_body:
         return jsonify(message='Name is a required attribute'), 400
-    store = dalstore.add_store(req_body)
+    store = dalstore.add_store_with_dict(req_body)
     return store_schema.jsonify(store)
 
 # /find - GET

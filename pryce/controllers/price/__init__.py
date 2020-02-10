@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from pryce.database.models import Item, Store, Price
-from pryce.database.schemas import ItemSchema, StoreSchema, PriceSchema
+from pryce.database.models import Price
+from pryce.database.schemas import PriceSchema
 from pryce.database.dal.item import DALItem
 from pryce.database.dal.price import DALPrice
 from pryce.database.dal.store import DALStore
@@ -32,7 +32,7 @@ def add_price():
     # check if store exists, and create it if it doesn't
     store = dalstore.get_store_by_place_id(req_body.get('store').get('place_id'))
     if store == None:
-            store = dalstore.add_store(req_body.get('store'))
+            store = dalstore.add_store_with_dict(req_body.get('store'))
 
     price = req_body.get('price')
     currency = req_body.get('currency', 'USD')

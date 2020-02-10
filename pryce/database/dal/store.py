@@ -10,7 +10,7 @@ class DALStore():
         stores = Store.query.all()
         return stores
 
-    def add_store(self, store_dict):
+    def add_store_with_dict(self, store_dict):
         store = Store()
         store.update(store_dict)
         try:
@@ -25,20 +25,12 @@ class DALStore():
         return store
 
     def delete_store(self, store):
-        rows = Store.query.filter_by(code=item.code).delete()
-
-        db.session.delete(store)
+        rows = Store.query.filter_by(store_id=store.store_id).delete()
         db.session.commit()
+        return rows
 
-    """
-    :param store_dict: a dictionary containing a place_id value
-    :return: the updated store object or None if a store with the given place_id does not exist
-    """
-    def update_store(self, store_dict):
-        store = None
-        plid = store_dict['place_id']
-        store = Store.query.filter_by(place_id=plid).first()
-        if store is not None:
-            store.update(store_dict)
-            db.session.commit()
+    def update_store(self, store):
+        db.session.commit()
         return store
+
+

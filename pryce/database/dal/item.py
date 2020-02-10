@@ -29,7 +29,7 @@ class DALItem:
             db.session.commit()
         return item
 
-    def delete_item(self, code):
-        rows = Item.query.filter_by(code=code).delete()
+    def delete_item(self, item_id):
+        rows = Item.query.filter_by(item_id=item_id).delete()
         db.session.commit()
         return rows

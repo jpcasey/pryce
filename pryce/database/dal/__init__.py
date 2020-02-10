@@ -11,6 +11,7 @@ migrate = Migrate(app, db)
 
 test_db_cfg = {}
 test_db_cfg['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+test_db_cfg['SQLALCHEMY_ECHO'] = True
 test_db_cfg['FLASK_ENV'] = 'development'
 test_db_cfg['TESTING'] = True
 

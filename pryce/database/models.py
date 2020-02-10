@@ -20,7 +20,7 @@ class Appuser(PryceModel, db.Model):
     karma = db.Column(db.Integer)
     image = db.Column(db.String)
     lat = db.Column(db.Numeric(17, 15))
-    lng = db.Column(db.Numeric(17, 15))
+    lng = db.Column(db.Numeric(18, 15))
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
 
@@ -99,30 +99,32 @@ class ListItem(db.Model):
     list1 = db.relationship('List', primaryjoin='ListItem.list_id == List.list_id', backref='list_list_items_0')
 
 
+class Store(PryceModel, db.Model):
+    __tablename__ = 'store'
+    store_id = db.Column(db.Integer, primary_key=True)
+    place_id = db.Column(db.String, unique=True, nullable=False)
+    lat = db.Column(db.Numeric(17, 15))
+    lng = db.Column(db.Numeric(18, 15))
+    address = db.Column(db.String)
+    chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
+    name = db.Column(db.String)
+    image = db.Column(db.String)
+    chain = db.relationship('Chain', primaryjoin='Store.chain_id == Chain.chain_id', backref='stores')
+    #TODO should be not nullable reported = db.Column(db.DateTime(True), nullable=False)
+    reported = db.Column(db.DateTime(True))
+
+
 class Price(PryceModel, db.Model):
     __tablename__ = 'price'
     price_id = db.Column(db.Integer, primary_key=True)
-    currency = db.Column(db.String(3))
+    currency = db.Column(db.String(3), default='USD')
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'))
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    price = db.Column(db.Numeric(12, 3))
+    price = db.Column(db.Numeric(12, 3), nullable=False)
     reported = db.Column(db.DateTime(True), nullable=False)
     store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'))
     appuser = db.relationship('Appuser', primaryjoin='Price.appuser_id == Appuser.appuser_id', backref='prices')
     item = db.relationship('Item', primaryjoin='Price.item_id == Item.item_id', backref='prices')
     store = db.relationship('Store', primaryjoin='Price.store_id == Store.store_id', backref='prices')
 
-
-class Store(PryceModel, db.Model):
-    __tablename__ = 'store'
-    store_id = db.Column(db.Integer, primary_key=True)
-    place_id = db.Column(db.String, unique=True, nullable=False)
-    lat = db.Column(db.Numeric(17, 15))
-    lng = db.Column(db.Numeric(17, 15))
-    address = db.Column(db.String)
-    chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    name = db.Column(db.String)
-    image = db.Column(db.String)
-    chain = db.relationship('Chain', primaryjoin='Store.chain_id == Chain.chain_id', backref='stores')
-    reported = db.Column(db.DateTime(True), nullable=False)
 

@@ -1,6 +1,6 @@
 __all__ = ['app', 'jwt']
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from pryce.config import Config
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 
@@ -17,6 +17,10 @@ app.url_map.strict_slashes = False
 app.register_blueprint(items_controller.bp)
 app.register_blueprint(stores_controller.bp)
 app.register_blueprint(prices_controller.bp)
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html')
 
 # route to authenticate users and create & provide access tokens.
 @app.route('/login', methods=['POST'])

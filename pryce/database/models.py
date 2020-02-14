@@ -7,7 +7,7 @@ class PryceModel:
             setattr(self, k, v)
 
 
-class Acces(db.Model):
+class Access(db.Model):
     __tablename__ = 'access'
     access_id = db.Column(db.Integer, primary_key=True)
 
@@ -74,29 +74,30 @@ class Item(PryceModel, db.Model):
     image = db.Column(db.String)
 
 
-class List(PryceModel, db.Model):
-    __tablename__ = 'list'
+class PryceList(PryceModel, db.Model):
+    __tablename__ = 'pryce_list'
 
-    list_id = db.Column(db.Integer, primary_key=True)
+    pryce_list_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, default="My List")
     owner = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
     access_id = db.Column(db.ForeignKey('access.access_id', ondelete='RESTRICT', onupdate='CASCADE'))
-    access = db.relationship('Acces', primaryjoin='List.access_id == Acces.access_id', backref='lists')
-    appuser = db.relationship('Appuser', primaryjoin='List.owner == Appuser.appuser_id', backref='lists')
+    access = db.relationship('Access', primaryjoin='PryceList.access_id == Access.access_id', backref='lists')
+    appuser = db.relationship('Appuser', primaryjoin='PryceList.owner == Appuser.appuser_id', backref='lists')
 
 
-class ListItem(db.Model):
-    __tablename__ = 'list_item'
+class PryceListItem(db.Model):
+    __tablename__ = 'pryce_list_item'
 
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
-    list_id = db.Column(db.ForeignKey('list.list_id'),
-                        db.ForeignKey('list.list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
+    pryce_list_id = db.Column(db.ForeignKey('pryce_list.pryce_list_id'),
+                        db.ForeignKey('pryce_list.pryce_list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
     quantity = db.Column(db.Integer, server_default=db.FetchedValue())
 
-    item = db.relationship('Item', primaryjoin='ListItem.item_id == Item.item_id', backref='list_items')
-    list = db.relationship('List', primaryjoin='ListItem.list_id == List.list_id', backref='list_list_items')
-    list1 = db.relationship('List', primaryjoin='ListItem.list_id == List.list_id', backref='list_list_items_0')
+    items = db.relationship('Item', primaryjoin='PryceListItem.item_id == Item.item_id', backref='pryce_list_items')
+    pryce_lists = db.relationship('PryceList', primaryjoin='PryceListItem.pryce_list_id == PryceList.pryce_list_id', backref='items_pryce_list')
+    #list1 = db.relationship('List', primaryjoin='PryceListItem.pryce_list_id == PryceList.list_id', backref='list_list_items_0')
 
 
 class Store(PryceModel, db.Model):

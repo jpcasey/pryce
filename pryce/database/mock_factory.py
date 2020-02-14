@@ -2,10 +2,9 @@ from datetime import timezone, timedelta
 import factory
 from pryce.database.dal import test_db_cfg
 from pryce import app
-from flask_sqlalchemy import SQLAlchemy
 from factory.alchemy import SQLAlchemyModelFactory
 from openlocationcode.openlocationcode import *
-from pryce.database.models import db, Acces, Appuser, Item, Badge, Chain, Store, Price
+from pryce.database.models import db, Appuser, Item, Badge, Store, Price, List
 
 item_names = ['Bounty', 'Cheezits', 'Tootsie Pops', 'NF-S12A PWM', 'CP850PFCLCD', 'Chisel Tip Marker',
               'Glass Fuses', 'iPhone 7+', 'Premium Toner Cartridge', 'Boston Baked Beans', 'X99-Deluxe',
@@ -89,11 +88,11 @@ class PryceMockPriceModel(SQLAlchemyModelFactory):
     appuser = factory.SubFactory(PryceMockAppuserModel)
     item = factory.SubFactory(PryceMockItemModel)
 
-'''
 class PryceMockListFactory(SQLAlchemyModelFactory):
     class Meta:
         model = List
 
+'''
 
 class PryceMockCommentFactory(SQLAlchemyModelFactory):
     class Meta:

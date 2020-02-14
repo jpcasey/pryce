@@ -126,9 +126,8 @@ def upgrade():
     sa.Column('item_id', sa.Integer(), nullable=False),
     sa.Column('list_id', sa.Integer(), nullable=False),
     sa.Column('quantity', sa.Integer(), server_default=FetchedValue(), nullable=True),
-    sa.ForeignKeyConstraint(['item_id'], ['item.item_id'], onupdate='CASCADE', ondelete='RESTRICT'),
-    sa.ForeignKeyConstraint(['list_id'], ['list.list_id'], ),
-    sa.ForeignKeyConstraint(['list_id'], ['list.list_id'], onupdate='CASCADE', ondelete='RESTRICT'),
+    sa.ForeignKeyConstraint(['item_id'], ['item.item_id'], onupdate='CASCADE', ondelete='RESTRICT', name='list_item_item_id_fkey'),
+    sa.ForeignKeyConstraint(['list_id'], ['list.list_id'], onupdate='CASCADE', ondelete='RESTRICT', name='list_item_list_id_fkey'),
     sa.PrimaryKeyConstraint('item_id', 'list_id')
     )
     # ### end Alembic commands ###

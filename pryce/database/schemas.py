@@ -26,9 +26,6 @@ class PriceSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
-    #item = fields.Nested(ItemSchema(only=("item_id", "brand", "name", "code")))
-    #store = fields.Nested(StoreSchema(only=("store_id", "name", "place_id")))
-
 
 class AppuserSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -36,23 +33,17 @@ class AppuserSchema(SQLAlchemyAutoSchema):
         include_fk = True
         model = Appuser
 
-
 class PryceListSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PryceList
         load_instance = True
         include_fk = True
 
-
+# eg. of serialization of SQLA obj: {'item': 125, 'pryce_list': 55, 'quantity': 49}
 class PryceListItemSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PryceListItem
         load_instance = True
-        include_fk = True
+        include_relationships = True
 
-    #@post_load
-    #def deserialize_to_list(self, data, **kwargs):
-    #    return PryceList(**data)
 
-    #list_id = fields.Int(dump_only=True)
-    #name = fields.String()

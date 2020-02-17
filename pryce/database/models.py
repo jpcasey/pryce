@@ -95,9 +95,8 @@ class PryceListItem(db.Model):
                         nullable=False)
     quantity = db.Column(db.Integer, server_default=db.FetchedValue())
 
-    items = db.relationship('Item', primaryjoin='PryceListItem.item_id == Item.item_id', backref='pryce_list_items')
-    pryce_lists = db.relationship('PryceList', primaryjoin='PryceListItem.pryce_list_id == PryceList.pryce_list_id', backref='items_pryce_list')
-    #list1 = db.relationship('List', primaryjoin='PryceListItem.pryce_list_id == PryceList.list_id', backref='list_list_items_0')
+    item = db.relationship('Item', primaryjoin='PryceListItem.item_id == Item.item_id', backref='pryce_list_items')
+    pryce_list = db.relationship('PryceList', primaryjoin='PryceListItem.pryce_list_id == PryceList.pryce_list_id', backref='items_pryce_list')
 
 
 class Store(PryceModel, db.Model):

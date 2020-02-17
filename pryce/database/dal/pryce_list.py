@@ -1,11 +1,11 @@
-from sqlalchemy.exc import IntegrityError
 from pryce.database.dal import db
-from pryce.database.models import PryceList
 
 class DALPryceList:
 
-    def create_list(ma_list):
+    def create_pryce_list(self, ma_list):
         db.session.add(ma_list)
         db.session.commit()
+        return ma_list
 
-
+    def update_pryce_list(self, list_id, item_id):
+        pass

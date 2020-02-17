@@ -1,24 +1,49 @@
 # Schemas for Flask-Marshmallow to easily JSON serialize SQLAlchemy resultsets
+from flask_marshmallow.sqla import SQLAlchemySchema, SQLAlchemyAutoSchema
 from pryce.database.dal import ma
-from marshmallow import fields
+from marshmallow import fields, post_load
 from pryce.database.models import *
 import simplejson
 
-class ItemSchema(ma.ModelSchema):
-    class Meta:
-        json_module = simplejson
-        model = Item
-        exclude = ["prices", "list_items"]
-        
-class StoreSchema(ma.ModelSchema):
-    class Meta:
-        json_module = simplejson
-        model = Store
-        exclude = ["prices"]
 
-class PriceSchema(ma.ModelSchema):
+class ItemSchema(SQLAlchemyAutoSchema):
     class Meta:
-        json_module = simplejson
+        model = Item
+        load_instance = True
+        include_fk = True
+
+
+class StoreSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Store
+        load_instance = True
+        include_fk = True
+
+
+class PriceSchema(SQLAlchemyAutoSchema):
+    class Meta:
         model = Price
-    item = fields.Nested(ItemSchema(only=("item_id", "brand", "name", "code")))
-    store = fields.Nested(StoreSchema(only=("store_id", "name", "place_id")))
+        load_instance = True
+        include_fk = True
+
+
+class AppuserSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        load_instance = True
+        include_fk = True
+        model = Appuser
+
+class PryceListSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = PryceList
+        load_instance = True
+        include_fk = True
+
+# eg. of serialization of SQLA obj: {'item': 125, 'pryce_list': 55, 'quantity': 49}
+class PryceListItemSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = PryceListItem
+        load_instance = True
+        include_relationships = True
+
+

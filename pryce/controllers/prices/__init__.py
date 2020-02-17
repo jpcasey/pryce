@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 from pryce.database.models import Price
 from pryce.database.schemas import PriceSchema
 from pryce.database.dal.item import DALItem
@@ -7,7 +7,7 @@ from pryce.database.dal.store import DALStore
 from pryce.controllers.items import create_item
 from datetime import datetime
 
-bp = Blueprint('price', __name__, url_prefix='/price')
+bp = Blueprint('prices', __name__, url_prefix='/prices')
 price_schema = PriceSchema()
 dalitem = DALItem()
 dalprice = DALPrice()
@@ -39,4 +39,4 @@ def add_price():
     reported = req_body.get('reported', datetime.utcnow())
     item_price = Price(currency=currency, price=price, item_id=item.item_id, store_id=store.store_id, reported=reported)
     dalprice.add_price(item_price)
-    return price_schema.jsonify(item_price)
+    return price_schema.jsonify(item_price), 200

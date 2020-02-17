@@ -78,7 +78,7 @@ def delete_item(code):
 def get_item_prices(code):
     prices = dalprice.get_item_prices(code)
     if prices == None:
-        return jsonify(message = 'Item not found.'), 404
+        return jsonify(message='Item not found.'), 404
     price_schema = PriceSchema()
     return price_schema.jsonify(prices, many=True)
 

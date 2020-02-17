@@ -29,7 +29,7 @@ def create_list():
 def add_items_to_list(pryce_list_id):
     req_body = request.get_json()
     item_id = req_body['item_id']
-    quant = req_body['quantity']
+    quant = req_body.get('quantity', 1)
     if not item_id or not quant:
         return jsonify(message='Invalid JSON. Missing item'), 400
     pli_obj = dal_pl.update_pryce_list(pryce_list_id, item_id, quant)

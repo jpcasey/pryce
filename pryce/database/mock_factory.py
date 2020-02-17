@@ -50,12 +50,12 @@ class PryceMockItemModel(SQLAlchemyModelFactory):
         model = Item
 
     code = factory.Faker('ean13', leading_zero=None)
-    name = factory.Faker('sentence', nb_words=1, variable_nb_words="False", ext_word_list=item_names)
+    name = factory.Iterator(item_names)
     brand = factory.Faker('company')
     quantity = factory.Faker('random_number', digits=2)
     quant_unit = factory.Iterator(['oz', 'fl oz', 'ml', 'g', 'kg', 'gal', 'qt', 'ct', 'l', 'lb'])
     description = factory.Faker('catch_phrase')
-    image = '/static/item/' + factory.Faker('hexify', text='^^^^^^^^^^', upper="False").generate() + '.jpg'
+    image = factory.Faker('file_path', depth=3, extension='jpg')
 
 
 class PryceMockStoreModel(SQLAlchemyModelFactory):

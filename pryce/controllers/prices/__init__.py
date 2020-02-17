@@ -39,4 +39,4 @@ def add_price():
     reported = req_body.get('reported', datetime.utcnow())
     item_price = Price(currency=currency, price=price, item_id=item.item_id, store_id=store.store_id, reported=reported)
     dalprice.add_price(item_price)
-    return price_schema.jsonify(item_price)
+    return price_schema.jsonify(item_price), 200

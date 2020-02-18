@@ -63,7 +63,7 @@ def login():
         return jsonify(message="Bad username or password."), 401
 
     identity = dict(username=username, appuser_id=user.appuser_id)
-    access_token = create_access_token(identity=identity)
+    access_token = create_access_token(identity=identity, expires_delta=False)
     return jsonify(message="Successfully authenticated.", access_token=access_token), 200
 
 

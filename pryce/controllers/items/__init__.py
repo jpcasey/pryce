@@ -23,7 +23,7 @@ def create_item(item_json):
 # Returns a list of items in the system.  Can be filtered using query parameters (e.g. name, brand)
 @bp.route('/', methods=['GET'])
 def get_items():
-    items = Item.query.all()
+    items = dalitem.get_items(request.args.get('name'), request.args.get('brand'))
     return item_schema.jsonify(items, many=True)
 
 # /- POST

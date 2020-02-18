@@ -10,6 +10,14 @@ class DALStore():
         stores = Store.query.all()
         return stores
 
+    def add_store(self, store):
+        try:
+            db.session.add(store)
+            db.session.commit()
+        except IntegrityError as ie:
+            store = None
+        return store
+
     def add_store_with_dict(self, store_dict):
         store = Store()
         store.update(store_dict)

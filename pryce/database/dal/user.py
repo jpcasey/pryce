@@ -1,12 +1,12 @@
 from pryce.database.models import Appuser
 from pryce.database.dal import db
 
-
 class DALUser:
 
-    def get_password_for_username(self, name):
+    def get_user(self, name):
         user = Appuser.query.filter_by(username=name).first()
         return user
 
-    def user_add(self, user):
+    def add_user(self, user):
         db.session.add(user)
+        db.session.commit()

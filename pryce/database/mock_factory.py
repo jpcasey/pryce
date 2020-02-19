@@ -103,18 +103,15 @@ class PryceMockPryceListModel(SQLAlchemyModelFactory):
 class PryceMockPryceListItemModel(SQLAlchemyModelFactory):
     class Meta:
         sqlalchemy_session = db.session
-        sqlalchemy_session_persistence = 'commit'
+        sqlalchemy_session_persistence = 'flush'
         model = PryceListItem
 
-    quantity = factory.Faker('numerify', text='##')
-    #items = factory.RelatedFactory(PryceMockItemModel)
-    #pryce_lists = factory.RelatedFactory(PryceMockPryceListModel)
-    items = factory.SubFactory(PryceMockItemModel)
-    pryce_lists = factory.SubFactory(PryceMockPryceListModel)
-
+    quantity = factory.Faker('random_int', min=1, max=99, step=1)
+    item = factory.SubFactory(PryceMockItemModel)
+    pryce_list = factory.SubFactory(PryceMockPryceListModel)
 '''
     @factory.post_generation
-    def items(self, create, extracted, **kwargs):
+    def fks(self, create, extracted, **kwargs):
         if extracted:
             for i in extracted:
                 self.items.add(i)
@@ -135,13 +132,15 @@ class PryceMockCommentFactory(SQLAlchemyModelFactory):
 if __name__ == '__main__':
     app.config.from_object(test_db_cfg)
     db.drop_all()
+    print("Dropped all")
     db.create_all()
-    # print("Using {0} to connect to the database.".format(db.get_app().config['SQLALCHEMY_DATABASE_URI']))
+    print("Created all")
 
     badges = PryceMockBadgeModel.build_batch(5)
     for b in badges:
         db.session.add(b)
         db.session.commit()
+    print("Created badges")
 
     users = PryceMockAppuserModel.build_batch(10)
     # add hard-coded users
@@ -150,30 +149,38 @@ if __name__ == '__main__':
     for u in users:
         db.session.add(u)
         db.session.commit()
+    print("Created users")
 
     stores = PryceMockStoreModel.build_batch(20)
     for s in stores:
         db.session.add(s)
         db.session.commit()
+    print("Created stores")
 
     items = PryceMockItemModel.build_batch(20)
     for i in items:
         db.session.add(i)
         db.session.commit()
+    print("Created items")
 
-    prices = PryceMockPriceModel.build_batch(100)
+    prices = PryceMockPriceModel.build_batch(50)
     for p in prices:
         db.session.add(p)
         db.session.commit()
+    print("Created prices")
 
-    pryce_lists = PryceMockPryceListModel.build_batch(50)
+    pryce_lists = PryceMockPryceListModel.build_batch(20)
     for pl in pryce_lists:
         db.session.add(pl)
         db.session.commit()
+    print("Created lists")
 
-    pryce_lists_items = PryceMockPryceListItemModel.build_batch(1000)
+    pryce_lists_items = PryceMockPryceListItemModel.build_batch(100)
     for pli in pryce_lists_items:
         db.session.add(pli)
         db.session.commit()
+    print("Created list/items")
 
-
+    db.close_all_sessions()
+    print("Done")
+    exit(0)

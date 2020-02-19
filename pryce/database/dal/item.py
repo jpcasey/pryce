@@ -5,9 +5,15 @@ from pryce.database.models import Item
 
 class DALItem:
 
-    def get_items(self):
-        items = Item.query.all()
-        return items
+    def get_items(self, name = None, brand = None):
+        items = Item.query
+        if name:
+            name = f'%{name}%'
+            items = items.filter(Item.name.ilike(name))
+        if brand:
+            brand = f'%{brand}%'
+            items = items.filter(Item.brand.ilike(brand))
+        return items.all()
 
     def add_item(self, item):
         try:

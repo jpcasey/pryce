@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from marshmallow import ValidationError
 from pryce.database.models import Item, Price
 from pryce.database.schemas import ItemSchema, PriceSchema
 from pryce.database.dal.item import DALItem
@@ -9,33 +10,25 @@ item_schema = ItemSchema()
 dalitem = DALItem()
 dalprice = DALPrice()
 
-# takes a json object and returns an Item model object
-def create_item(item_json):
-    name = item_json.get('name')
-    code = item_json.get('code')
-    brand = item_json.get('brand', None)
-    quantity = item_json.get('quantity', None)
-    quant_unit = item_json.get('quant_unit', None)
-    description = item_json.get('description', '')
-    return Item(name=name, brand=brand, code=code, quantity=quantity, quant_unit=quant_unit, description=description)
-
 # / - GET
 # Returns a list of items in the system.  Can be filtered using query parameters (e.g. name, brand)
 @bp.route('/', methods=['GET'])
 def get_items():
-    items = Item.query.all()
+    items = dalitem.get_items(request.args.get('name'), request.args.get('brand'))
     return item_schema.jsonify(items, many=True)
 
 # /- POST
 # Adds an item to the system.
 @bp.route('/', methods=['POST'])
 def add_item():
-    req_body = request.get_json()
-    if 'name' not in req_body or 'code' not in req_body:
-        return jsonify(message='Name and brand are required attributes.'), 400
-    # other options here would be handing the DAL the json dict (see update_item)
-    # or deserializing to an SQLA object via marshmallow and passing that in
-    item = create_item(req_body)
+    if not request.is_json:
+        return jsonify(message="Missing JSON in request"), 400
+
+    try:
+        item = item_schema.load(request.get_json())
+    except ValidationError as err:
+        return jsonify(message="Bad Request", validation_errors=err.messages), 400
+        
     dalitem.add_item(item)
     return item_schema.jsonify(item)
 

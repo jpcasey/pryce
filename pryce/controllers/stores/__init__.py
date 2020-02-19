@@ -113,16 +113,6 @@ def add_store_item(store_id, item_id):
     dalprice.add(item_price)
     return price_schema.jsonify(item_price)
 
-# /<store_id>/items/<item_id> - PUT
-# Updates price information for a specific item at a specific store.
-
-######## Do we even need to allow this??  Would just add a new record if need to change current price.
-
-# /<store_id>/items/<item_id> - DELETE
-# Deletes price information for a specific item at a specific store.
-
-######## Do we even want to allow this??
-
 # /<store_id>/items/<item_id>/comments - GET
 # Returns all comments and ratings for a specific item at a specific store.
 

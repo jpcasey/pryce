@@ -12,3 +12,5 @@ marshmallow
 flask-marshmallow
 marshmallow-sqlalchemy
 flask-jwt-extended
+factory-boy
+openlocationcode

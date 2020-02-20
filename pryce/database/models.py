@@ -19,8 +19,8 @@ class Appuser(PryceModel, db.Model):
     password = db.Column(db.String)
     karma = db.Column(db.Integer)
     image = db.Column(db.String)
-    lat = db.Column(db.Numeric(17, 15))
-    lng = db.Column(db.Numeric(18, 15))
+    lat = db.Column(db.Numeric(10, 8))
+    lng = db.Column(db.Numeric(11, 8))
     badges = db.relationship('Badge', secondary='badge_appuser', backref='appusers')
 
 
@@ -90,8 +90,7 @@ class PryceListItem(db.Model):
 
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
-    pryce_list_id = db.Column(db.ForeignKey('pryce_list.pryce_list_id'),
-                        db.ForeignKey('pryce_list.pryce_list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
+    pryce_list_id = db.Column(db.ForeignKey('pryce_list.pryce_list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
     quantity = db.Column(db.Integer, server_default=db.FetchedValue())
 
@@ -103,8 +102,8 @@ class Store(PryceModel, db.Model):
     __tablename__ = 'store'
     store_id = db.Column(db.Integer, primary_key=True)
     place_id = db.Column(db.String, unique=True, nullable=False)
-    lat = db.Column(db.Numeric(17, 15))
-    lng = db.Column(db.Numeric(18, 15))
+    lat = db.Column(db.Numeric(10, 8))
+    lng = db.Column(db.Numeric(11, 8))
     address = db.Column(db.String)
     chain_id = db.Column(db.ForeignKey('chain.chain_id', ondelete='RESTRICT', onupdate='CASCADE'))
     name = db.Column(db.String)

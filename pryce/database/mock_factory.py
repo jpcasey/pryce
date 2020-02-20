@@ -1,9 +1,10 @@
 from datetime import timezone, timedelta
 import factory
+from werkzeug.security import generate_password_hash
+
 from pryce.database.dal import test_db_cfg
 from pryce import app
 from factory.alchemy import SQLAlchemyModelFactory
-from openlocationcode.openlocationcode import *
 from pryce.database.models import db, Appuser, Item, Badge, Store, Price, PryceList, PryceListItem
 
 item_names = ['Bounty', 'Cheezits', 'Tootsie Pops', 'NF-S12A PWM', 'CP850PFCLCD', 'Chisel Tip Marker',
@@ -12,10 +13,6 @@ item_names = ['Bounty', 'Cheezits', 'Tootsie Pops', 'NF-S12A PWM', 'CP850PFCLCD'
 
 list_names = ['Birthday Party', 'Moving', 'Camping', 'Tailgating', 'Groceries', 'DIY',
               'Home Improvement', 'Bake-off', 'Catering', 'Troop Brunch', 'Improvised Explosives']
-
-def olc(length):
-    lat, lng = factory.Faker('local_latlng', country_code='US', coords_only=True)
-    return encode(float(lat), float(lng), length)
 
 
 class PryceMockBadgeModel(SQLAlchemyModelFactory):
@@ -36,10 +33,10 @@ class PryceMockAppuserModel(SQLAlchemyModelFactory):
 
     username = factory.Faker('email')
     password = factory.Faker('password', length=16, special_chars=True, digits=True, upper_case=True, lower_case=True)
-    lat, _ = factory.Faker('local_latlng', country_code='US', coords_only=True).generate()
-    _, lng = factory.Faker('local_latlng', country_code='US', coords_only=True).generate()
+    lat = factory.Faker('latitude')
+    lng = factory.Faker('longitude')
     karma = factory.Faker('random_int', min=0, max=99999, step=1)
-    image = '/static/item/' + factory.Faker('hexify', text='^^^^^^^^^^', upper="False").generate() + '.jpg'
+    image = factory.Faker('file_path', depth=3, extension='jpg')
     badges = factory.List([factory.SubFactory(PryceMockBadgeModel)])
 
 
@@ -65,8 +62,8 @@ class PryceMockStoreModel(SQLAlchemyModelFactory):
         model = Store
 
     place_id = factory.Faker('lexify', text='????????????????????????????')
-    lat, _ = factory.Faker('local_latlng', country_code='US', coords_only=True).generate()
-    _, lng = factory.Faker('local_latlng', country_code='US', coords_only=True).generate()
+    lat = factory.Faker('latitude')
+    lng = factory.Faker('longitude')
     address = factory.Faker('address')
     #chain_id =
     name = factory.Faker('company')
@@ -103,7 +100,7 @@ class PryceMockPryceListModel(SQLAlchemyModelFactory):
 class PryceMockPryceListItemModel(SQLAlchemyModelFactory):
     class Meta:
         sqlalchemy_session = db.session
-        sqlalchemy_session_persistence = 'flush'
+        sqlalchemy_session_persistence = 'commit'
         model = PryceListItem
 
     quantity = factory.Faker('random_int', min=1, max=99, step=1)
@@ -130,6 +127,7 @@ class PryceMockCommentFactory(SQLAlchemyModelFactory):
 '''
 
 if __name__ == '__main__':
+    db.close_all_sessions()
     app.config.from_object(test_db_cfg)
     db.drop_all()
     print("Dropped all")
@@ -144,8 +142,8 @@ if __name__ == '__main__':
 
     users = PryceMockAppuserModel.build_batch(10)
     # add hard-coded users
-    u1 = PryceMockAppuserModel(username='user1', password='Pa55word')
-    u2 = PryceMockAppuserModel(username='user2', password='Pa55word')
+    passhash = generate_password_hash('Pa55word')
+    u1 = PryceMockAppuserModel.create(username='user1', password=passhash, karma=33496, lat=36.117378, lng=-97.05659)
     for u in users:
         db.session.add(u)
         db.session.commit()
@@ -169,12 +167,25 @@ if __name__ == '__main__':
         db.session.commit()
     print("Created prices")
 
+    owner1 = Appuser.query.filter_by(appuser_id=1).first()
+    list1 = PryceMockPryceListModel.create(owner=1, name='Party List', appuser=owner1)
+    list2 = PryceMockPryceListModel.create(owner=1, name='Pet Supplies', appuser=owner1)
+    list3 = PryceMockPryceListModel.create(owner=1, name='Groceries', appuser=owner1)
+    list4 = PryceMockPryceListModel.create(owner=1, name='Bunker Provisions', appuser=owner1)
     pryce_lists = PryceMockPryceListModel.build_batch(20)
     for pl in pryce_lists:
         db.session.add(pl)
         db.session.commit()
     print("Created lists")
 
+    item2 = Item.query.filter_by(item_id=2).first()
+    item10 = Item.query.filter_by(item_id=10).first()
+    item7 = Item.query.filter_by(item_id=7).first()
+    item9 = Item.query.filter_by(item_id=9).first()
+    pli1 = PryceMockPryceListItemModel.create(quantity=1, pryce_list=list1, item=item2)
+    pli2 = PryceMockPryceListItemModel.create(quantity=5, pryce_list=list1, item=item10)
+    pli3 = PryceMockPryceListItemModel.create(quantity=11, pryce_list=list1, item=item7)
+    pli4 = PryceMockPryceListItemModel.create(quantity=4, pryce_list=list1, item=item9)
     pryce_lists_items = PryceMockPryceListItemModel.build_batch(100)
     for pli in pryce_lists_items:
         db.session.add(pli)

@@ -1,12 +1,19 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
+
+from pryce import jwt
 from pryce.database.models import Appuser
 from pryce.database.dal.user import DALUser
 
 user_dal = DALUser()
 
 bp = Blueprint('auth', __name__, url_prefix='/')
+
+'''@jwt.user_loader_callback_loader
+def user_loader_callback(identity):
+    return identity
+'''
 
 # /register - POST
 # Takes a JSON object with a 'username' and 'password'

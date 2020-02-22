@@ -44,15 +44,15 @@ class DALPryceList:
             db.session.commit()
         return pli
 
-    def get_pryce_list_items(self, pryce_list_id):
-        items = db.query(PryceListItem).join(Item).filter_by(pryce_list_id=pryce_list_id).all()
+    def get_pryce_list_items(self, pl_id):
+        items = db.session.query(Item).join(PryceListItem).filter(PryceListItem.pryce_list_id==pl_id).all()
         return items
 
     def get_detailed_pryce_list(self, pryce_list_id):
         plain_sql = """with table1 as
                 (select row_number() over (partition by pri.item_id order by pri.reported desc) as rn,
                     pri.price, pri.item_id, pri.store_id, pri.reported from price pri ) 
-                select itm.name, table1.item_id, table1.reported, table1.price, sto.place_id, sto.name
+                select itm.name as item_name, table1.item_id, table1.reported, table1.price, sto.place_id, sto.name as store_name
                   from item itm 
                     inner join table1 on table1.item_id = itm.item_id 
                     inner join store sto on table1.store_id = sto.store_id

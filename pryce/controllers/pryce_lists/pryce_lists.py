@@ -7,6 +7,7 @@ from pryce.database.dal.pryce_list import DALPryceList
 
 dal_pl = DALPryceList()
 
+
 # /- GET
 # Adds a list to the user's profile
 @bp.route('/', methods=['GET'])
@@ -55,16 +56,18 @@ def add_items_to_list(pryce_list_id):
 def get_list_items(pryce_list_id):
     pl_items = dal_pl.get_pryce_list_items(pryce_list_id)
     mas_json = ItemSchema(many=True).dump(pl_items)
-    return mas_json, 200
+    return jsonify(mas_json), 200
 
-#TODO: decide what exactly is needed by client
+
+# TODO: decide what exactly is needed by client
 # /details/<pryce_list_id> - GET
 # Gets item, price and location details for items in a list
 @bp.route('/details/<pryce_list_id>', methods=['GET'])
 @jwt_required
 def get_list_details(pryce_list_id):
-    tuples = dal_pl.get_detailed_pryce_list(pryce_list_id)
-    json = jsonify(tuples)
+    result = dal_pl.get_detailed_pryce_list(pryce_list_id)
+    dicts = []
+    for r in result:
+        dicts.append(dict(r))
+    json = jsonify(dicts)
     return json, 200
-
-

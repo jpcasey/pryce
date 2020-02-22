@@ -1,11 +1,12 @@
 from flask import jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import ValidationError
-from pryce.database.schemas import PryceListSchema, PryceListItemSchema
+from pryce.database.schemas import PryceListSchema, PryceListItemSchema, ItemSchema
 from pryce.controllers.pryce_lists import pryce_lists_bp as bp
 from pryce.database.dal.pryce_list import DALPryceList
 
 dal_pl = DALPryceList()
+
 
 # /- GET
 # Adds a list to the user's profile
@@ -46,3 +47,27 @@ def add_items_to_list(pryce_list_id):
     pli_obj = dal_pl.update_pryce_list(pryce_list_id, item_id, quant)
     mas_json = PryceListItemSchema().dump(pli_obj)
     return mas_json, 200
+
+
+# /<pryce_list_id> - GET
+# Gets items for list
+@bp.route('/<pryce_list_id>', methods=['GET'])
+@jwt_required
+def get_list_items(pryce_list_id):
+    pl_items = dal_pl.get_pryce_list_items(pryce_list_id)
+    mas_json = ItemSchema(many=True).dump(pl_items)
+    return jsonify(mas_json), 200
+
+
+# TODO: decide what exactly is needed by client
+# /details/<pryce_list_id> - GET
+# Gets item, price and location details for items in a list
+@bp.route('/details/<pryce_list_id>', methods=['GET'])
+@jwt_required
+def get_list_details(pryce_list_id):
+    result = dal_pl.get_detailed_pryce_list(pryce_list_id)
+    dicts = []
+    for r in result:
+        dicts.append(dict(r))
+    json = jsonify(dicts)
+    return json, 200

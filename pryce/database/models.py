@@ -51,13 +51,13 @@ class Comment(db.Model):
     __table_args__ = (
         db.CheckConstraint('(content IS NOT NULL) OR (rating IS NOT NULL)'),
     )
-
-    object_id = db.Column(db.Integer, primary_key=True, nullable=False)
+    comment_id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     rating = db.Column(db.Numeric)
     content = db.Column(db.Text)
-    type = db.Column(db.Integer, primary_key=True, nullable=False)
 
+    item = db.relationship('Item', primaryjoin='Comment.item_id == Item.item_id', backref='comments')
     appuser = db.relationship('Appuser', primaryjoin='Comment.appuser_id == Appuser.appuser_id', backref='comments')
 
 
@@ -117,7 +117,7 @@ class Price(PryceModel, db.Model):
     __tablename__ = 'price'
     price_id = db.Column(db.Integer, primary_key=True)
     currency = db.Column(db.String(3), default='USD')
-    item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'))
+    item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
     price = db.Column(db.Numeric(12, 3), nullable=False)
     reported = db.Column(db.DateTime(True), nullable=False)

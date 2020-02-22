@@ -1,10 +1,18 @@
-from pryce.database.models import PryceListItem, PryceList
+from pryce.database.models import PryceListItem, PryceList, Item
 from pryce.database.dal import db
-
+from sqlalchemy import text
 
 class DALPryceList:
 
     def get_pryce_lists(self, appuser_id):
+        plists = PryceList.query.filter_by(owner=appuser_id).all()
+        return plists
+
+    def get_list_items(self, appuser_id):
+        plists = PryceList.query.filter_by(owner=appuser_id).all()
+        return plists
+
+    def get_list_details(self, appuser_id):
         plists = PryceList.query.filter_by(owner=appuser_id).all()
         return plists
 
@@ -35,3 +43,21 @@ class DALPryceList:
             pli.quantity = quant
             db.session.commit()
         return pli
+
+    def get_pryce_list_items(self, pl_id):
+        items = db.session.query(Item).join(PryceListItem).filter(PryceListItem.pryce_list_id==pl_id).all()
+        return items
+
+    def get_detailed_pryce_list(self, pryce_list_id):
+        plain_sql = """with table1 as
+                (select row_number() over (partition by pri.item_id order by pri.reported desc) as rn,
+                    pri.price, pri.item_id, pri.store_id, pri.reported from price pri ) 
+                select itm.name as item_name, table1.item_id, table1.reported, table1.price, sto.place_id, sto.name as store_name
+                  from item itm 
+                    inner join table1 on table1.item_id = itm.item_id 
+                    inner join store sto on table1.store_id = sto.store_id
+                 where rn=1 and table1.item_id in 
+                 (select pli.item_id from pryce_list_item pli where pli.pryce_list_id = {});""".format(pryce_list_id)
+        sql = text(plain_sql)
+        result = db.engine.execute(sql)
+        return result

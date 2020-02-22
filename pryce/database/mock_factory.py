@@ -149,18 +149,30 @@ if __name__ == '__main__':
         db.session.commit()
     print("Created users")
 
+    store1 = PryceMockStoreModel(name='Fake Costco')
+    store2 = PryceMockStoreModel(name='Test Target')
+    store3 = PryceMockStoreModel(name='Phony Walmart')
     stores = PryceMockStoreModel.build_batch(20)
     for s in stores:
         db.session.add(s)
         db.session.commit()
     print("Created stores")
 
+    item1 = PryceMockItemModel(code='9651444131913', name='New Yorker Magazine', brand='Conde Nast', quantity=1, quant_unit='ct', description='NY Magazine',image='/static/path/nym.png')
+    item2 = PryceMockItemModel(code='4131913965144', name='Harper\'s Magazine', brand='MacArthur', quantity=1, quant_unit='ct', description='News and Fiction', image='/static/path/harpm.png')
+    item3 = PryceMockItemModel(code='1449654913131', name='2TB HDD', brand='Seagate', quantity=1, quant_unit='ct', description='Destined to fail', image='/static/path/shdd.png')
+    item4 = PryceMockItemModel(code='9691844838918', name='Coke Zero', brand='Coca-Cola', quantity=500, quant_unit='ml', description='Carbonated poison', image='/static/path/cv.png')
     items = PryceMockItemModel.build_batch(20)
     for i in items:
         db.session.add(i)
         db.session.commit()
     print("Created items")
 
+    price1 = PryceMockPriceModel(price=9.95, store=store1, item=item1)
+    price1 = PryceMockPriceModel(price=9.95, store=store1, item=item1, reported="2010-2-21")
+    price2 = PryceMockPriceModel(price=12.99, store=store2, item=item2)
+    price3 = PryceMockPriceModel(price=89.90, store=store3, item=item3)
+    price4 = PryceMockPriceModel(price=1.99, store=store2, item=item4)
     prices = PryceMockPriceModel.build_batch(50)
     for p in prices:
         db.session.add(p)
@@ -178,14 +190,10 @@ if __name__ == '__main__':
         db.session.commit()
     print("Created lists")
 
-    item2 = Item.query.filter_by(item_id=2).first()
-    item10 = Item.query.filter_by(item_id=10).first()
-    item7 = Item.query.filter_by(item_id=7).first()
-    item9 = Item.query.filter_by(item_id=9).first()
-    pli1 = PryceMockPryceListItemModel.create(quantity=1, pryce_list=list1, item=item2)
-    pli2 = PryceMockPryceListItemModel.create(quantity=5, pryce_list=list1, item=item10)
-    pli3 = PryceMockPryceListItemModel.create(quantity=11, pryce_list=list1, item=item7)
-    pli4 = PryceMockPryceListItemModel.create(quantity=4, pryce_list=list1, item=item9)
+    pli1 = PryceMockPryceListItemModel.create(quantity=1, pryce_list=list1, item=item1)
+    pli2 = PryceMockPryceListItemModel.create(quantity=5, pryce_list=list1, item=item2)
+    pli3 = PryceMockPryceListItemModel.create(quantity=11, pryce_list=list1, item=item3)
+    pli4 = PryceMockPryceListItemModel.create(quantity=4, pryce_list=list1, item=item4)
     pryce_lists_items = PryceMockPryceListItemModel.build_batch(100)
     for pli in pryce_lists_items:
         db.session.add(pli)

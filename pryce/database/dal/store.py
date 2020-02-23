@@ -6,9 +6,12 @@ from pryce.database.models import Store
 
 class DALStore():
 
-    def get(self):
-        stores = Store.query.all()
-        return stores
+    def get(self, name = None):
+        stores = Store.query
+        if name:
+            name = f'%{name}%'
+            stores = stores.filter(Store.name.ilike(name))
+        return stores.all()
 
     def add_store(self, store):
         try:

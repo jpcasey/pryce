@@ -16,7 +16,7 @@ dalstore = DALStore()
 # todo: allow filtering using query parameters (e.g. name, location).
 @bp.route('/', methods=['GET'])
 def get_stores():
-    stores = dalstore.get()
+    stores = dalstore.get(request.args.get('name'))
     return store_schema.jsonify(stores, many=True)
 
 # /- POST

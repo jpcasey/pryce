@@ -34,8 +34,6 @@ def add_item():
 
 # /<item_id> - GET
 # Returns information for a specific item.
-# How is the client going to know the PK of the item?
-# @bp.route('/<item_id>', methods=['GET'])
 @bp.route('/<code>', methods=['GET'])
 def get_item(code):
     item = dalitem.get_item(code)

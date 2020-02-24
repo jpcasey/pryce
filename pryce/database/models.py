@@ -53,6 +53,7 @@ class Comment(db.Model):
     )
     comment_id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
+    store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     rating = db.Column(db.Numeric)
     content = db.Column(db.Text)

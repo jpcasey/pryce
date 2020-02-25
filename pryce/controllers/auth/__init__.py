@@ -10,11 +10,6 @@ user_dal = DALUser()
 
 bp = Blueprint('auth', __name__, url_prefix='/')
 
-'''@jwt.user_loader_callback_loader
-def user_loader_callback(identity):
-    return identity
-'''
-
 # /register - POST
 # Takes a JSON object with a 'username' and 'password'
 # Returns HTTP 400 (Bad Request) if missing parameters or password does not meet minimum complexity requirement.

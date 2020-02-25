@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from pryce.database.dal import db
-from pryce.database.models import Store
+from pryce.database.models import Store, Comment
 
 
 class DALStore():
@@ -31,17 +31,36 @@ class DALStore():
             store = None
         return store
     
+    def get_store(self, store_id):
+        store = Store.query.filter_by(store_id=store_id).first()
+        return store
+
     def get_store_by_place_id(self, place_id):
         store = Store.query.filter_by(place_id=place_id).first()
         return store
 
-    def delete_store(self, store):
-        rows = Store.query.filter_by(store_id=store.store_id).delete()
+    def delete_store(self, store_id):
+        rows = Store.query.filter_by(store_id=store_id).delete()
         db.session.commit()
         return rows
 
-    def update_store(self, store):
-        db.session.commit()
+    def update_store(self, new_store):
+        store = Store.query.filter_by(store_id=new_store.store_id).first()
+        if store is not None:
+            store.update(new_store)
+            db.session.commit()
         return store
 
+    def get_comments(self, store_id):
+        comments = Comment.query.filter_by(store_id=store_id).all()
+        return comments
+        
+    def get_comment(self, comment_id):
+        comment = Comment.query.filter_by(comment_id=comment_id).first()
+        return comment
+
+    def add_comment(self, comment):
+        db.session.add(comment)
+        db.session.commit()
+        return comment
 

@@ -46,4 +46,10 @@ class PryceListItemSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_relationships = True
 
+class CommentSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        load_instance = True
+        include_fk = True
+        model = Comment
 
+    appuser = fields.Nested(AppuserSchema, exclude=(["password"]))

@@ -48,19 +48,17 @@ class Chain(db.Model):
 
 class Comment(db.Model):
     __tablename__ = 'comment'
-    __table_args__ = (
-        db.CheckConstraint('(content IS NOT NULL) OR (rating IS NOT NULL)'),
-    )
+
     comment_id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     store_id = db.Column(db.ForeignKey('store.store_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
     appuser_id = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'), nullable=False)
-    rating = db.Column(db.Numeric)
+    rating = db.Column(db.Numeric, nullable=False)
     content = db.Column(db.Text)
 
     item = db.relationship('Item', primaryjoin='Comment.item_id == Item.item_id', backref='comments')
     appuser = db.relationship('Appuser', primaryjoin='Comment.appuser_id == Appuser.appuser_id', backref='comments')
-
+    
 
 class Item(PryceModel, db.Model):
     __tablename__ = 'item'

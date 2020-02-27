@@ -7,6 +7,7 @@ from pryce.database.dal.price import DALPrice
 
 bp = Blueprint('items', __name__, url_prefix='/items')
 item_schema = ItemSchema()
+price_schema = PriceSchema()
 dalitem = DALItem()
 dalprice = DALPrice()
 
@@ -68,8 +69,5 @@ def delete_item(code):
 @bp.route('/<code>/prices', methods=['GET'])
 def get_item_prices(code):
     prices = dalprice.get_item_prices(code)
-    if prices == None:
-        return jsonify(message='Item not found.'), 404
-    price_schema = PriceSchema()
     return price_schema.jsonify(prices, many=True)
 

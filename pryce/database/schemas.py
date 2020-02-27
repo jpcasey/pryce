@@ -25,7 +25,8 @@ class PriceSchema(SQLAlchemyAutoSchema):
         model = Price
         load_instance = True
         include_fk = True
-
+    
+    store = fields.Nested(StoreSchema, only=("name", "place_id", "lat", "lng"))
 
 class AppuserSchema(SQLAlchemyAutoSchema):
     class Meta:

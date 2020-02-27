@@ -68,6 +68,10 @@ def delete_item(code):
 # todo: currently returns all prices. should group prices by store and only show the most recent for each store
 @bp.route('/<code>/prices', methods=['GET'])
 def get_item_prices(code):
+    item = dalitem.get_item(code)
+    if item == None:
+        return jsonify(message='Item not found'), 404
+        
     prices = dalprice.get_item_prices(code)
     return price_schema.jsonify(prices, many=True)
 

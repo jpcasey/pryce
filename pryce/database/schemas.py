@@ -28,11 +28,13 @@ class PriceSchema(SQLAlchemyAutoSchema):
     
     store = fields.Nested(StoreSchema, only=("name", "place_id", "lat", "lng"))
 
+
 class AppuserSchema(SQLAlchemyAutoSchema):
     class Meta:
         load_instance = True
         include_fk = True
         model = Appuser
+
 
 class PryceListSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -40,12 +42,14 @@ class PryceListSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
 
+
 # eg. of serialization of SQLA obj: {'item': 125, 'pryce_list': 55, 'quantity': 49}
 class PryceListItemSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = PryceListItem
         load_instance = True
         include_relationships = True
+
 
 class CommentSchema(SQLAlchemyAutoSchema):
     class Meta:

@@ -9,14 +9,14 @@ dal_pl = DALPryceList()
 
 
 # /- GET
-# Adds a list to the user's profile
 @bp.route('/', methods=['GET'])
 @jwt_required
 def get_lists():
     ident = get_jwt_identity()
     sqa_lists = dal_pl.get_pryce_lists(ident.get('appuser_id'))
     lpls = PryceListSchema(many=True)
-    return lpls.dumps(sqa_lists), 200
+    json = lpls.dumps(sqa_lists)
+    return json, 200
 
 
 # /- POST
@@ -24,14 +24,18 @@ def get_lists():
 @bp.route('/', methods=['POST'])
 @jwt_required
 def create_list():
-    req_body = request.get_json()
+    req_body = None;
     try:
-        pl_sqlao = PryceListSchema().load(transient=True, data=req_body)
-    except ValidationError as ve:
+        req_body = request.get_json()
+    except ValueError as ve:
         return jsonify(message='Invalid JSON'), 400
-    pl_sqlao.owner = get_jwt_identity().get('appuser_id')
-    pl_sqlao = dal_pl.create_pryce_list(pl_sqlao)
-    return PryceListSchema().dump(pl_sqlao), 200
+
+    tmp = {};
+    tmp['owner'] = get_jwt_identity().get('appuser_id')
+    tmp['name'] = req_body;
+    pl_sqlao = dal_pl.create_pryce_list(tmp)
+    schemaDump = PryceListSchema().dump(pl_sqlao)
+    return schemaDump, 200
 
 
 # /<pryce_list_id> - PUT

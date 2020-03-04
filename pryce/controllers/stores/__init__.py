@@ -92,10 +92,11 @@ def get_comments(store_id):
     
     # calculate the average rating
     avg_rating = 0
-    for comment in comments:
-        avg_rating += comment.rating
-    avg_rating /= len(comments)
-    
+    if len(comments) > 0:
+        for comment in comments:
+            avg_rating += comment.rating
+        avg_rating /= len(comments)
+
     output = {
         'comments':  comment_schema.dump(comments, many=True),
         'avg_rating': avg_rating

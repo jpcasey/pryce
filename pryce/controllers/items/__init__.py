@@ -18,6 +18,15 @@ def get_items():
     items = dalitem.get_items(request.args.get('name'), request.args.get('brand'))
     return item_schema.jsonify(items, many=True)
 
+@bp.route('/search', methods=['GET'])
+def get_search_list():
+    search_res = dalitem.get_search_list_items()
+    dicts = []
+    for r in search_res:
+        dicts.append(dict(r))
+    json = jsonify(dicts)
+    return json, 200
+
 # /- POST
 # Adds an item to the system.
 @bp.route('/', methods=['POST'])

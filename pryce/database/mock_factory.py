@@ -162,7 +162,7 @@ if __name__ == '__main__':
     item2 = PryceMockItemModel(code='4131913965144', name='Harper\'s Magazine', brand='MacArthur', quantity=1, quant_unit='ct', description='News and Fiction', image='/static/path/harpm.png')
     item3 = PryceMockItemModel(code='1449654913131', name='2TB HDD', brand='Seagate', quantity=1, quant_unit='ct', description='Destined to fail', image='/static/path/shdd.png')
     item4 = PryceMockItemModel(code='9691844838918', name='Coke Zero', brand='Coca-Cola', quantity=500, quant_unit='ml', description='Carbonated poison', image='/static/path/cv.png')
-    items = PryceMockItemModel.build_batch(20)
+    items = PryceMockItemModel.build_batch(12)
     for i in items:
         db.session.add(i)
         db.session.commit()

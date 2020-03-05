@@ -44,6 +44,8 @@ def create_list():
 @jwt_required
 def add_items_to_list(pryce_list_id):
     req_body = request.get_json()
+    # we do not attempt to load via schema b/c the object already has a primary key
+    # https://github.com/marshmallow-code/flask-marshmallow/issues/44
     item_id = req_body['item_id']
     quant = req_body.get('quantity', 1)
     if not item_id or not quant:
@@ -51,16 +53,6 @@ def add_items_to_list(pryce_list_id):
     pli_obj = dal_pl.update_pryce_list(pryce_list_id, item_id, quant)
     mas_json = PryceListItemSchema().dump(pli_obj)
     return mas_json, 200
-
-
-# /<pryce_list_id> - GET
-# Gets items for list
-@bp.route('/<pryce_list_id>', methods=['GET'])
-@jwt_required
-def get_list_items(pryce_list_id):
-    pl_items = dal_pl.get_pryce_list_items(pryce_list_id)
-    mas_json = ItemSchema(many=True).dump(pl_items)
-    return jsonify(mas_json), 200
 
 
 # TODO: decide what exactly is needed by client
@@ -75,3 +67,14 @@ def get_list_details(pryce_list_id):
         dicts.append(dict(r))
     json = jsonify(dicts)
     return json, 200
+
+
+# /<pryce_list_id>/<item_id> - DELETE
+# Deletes an item given a pryce_list_id and an item_id
+@bp.route('/<pryce_list_id>/<item_id>', methods=['DELETE'])
+def delete_item_from_list(pryce_list_id, item_id):
+    rows_deleted = dal_pl.delete_item_from_list(pryce_list_id, item_id)
+    if rows_deleted == 0:
+        return jsonify(message = 'Item was not deleted'), 404
+    return jsonify(message = f'Successfully deleted item'), 200
+

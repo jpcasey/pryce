@@ -28,9 +28,7 @@ class DALPryceList:
         """
         Updates the price_list_item table, adding an entry if necessary. Note that pryce_list_id and item_id form a
         composite key.
-        :param pryce_list_id:
-        :param item_id:
-        :param quant: an integer >= 1
+        :param mmObj: a Model instance of Item
         :return: a PryceListItem object representing the updated (or newly created) record
         """
         pli = PryceListItem.query.filter_by(pryce_list_id=pryce_list_id, item_id=item_id).first()
@@ -59,3 +57,10 @@ class DALPryceList:
         sql = text(plain_sql)
         result = db.engine.execute(sql)
         return result
+
+    def delete_item_from_list(self, pryce_list_id, item_id):
+        result = PryceListItem.query.filter_by(item_id=item_id, pryce_list_id=pryce_list_id).delete()
+        db.session.commit()
+        return result
+
+

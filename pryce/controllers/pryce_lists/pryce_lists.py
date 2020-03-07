@@ -64,7 +64,7 @@ def add_items_to_list(pryce_list_id):
     req_body = request.get_json()
     # we do not attempt to load via schema b/c the object already has a primary key
     # https://github.com/marshmallow-code/flask-marshmallow/issues/44
-    item_id = req_body['item_id']
+    item_id = req_body.get('item_id')
     quant = req_body.get('quantity', 1)
     if not item_id or not quant:
         return jsonify(message='Invalid JSON. Missing item'), 400

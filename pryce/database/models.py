@@ -78,7 +78,7 @@ class PryceList(PryceModel, db.Model):
 
     pryce_list_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, default="My List")
-    owner = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='RESTRICT', onupdate='CASCADE'))
+    owner = db.Column(db.ForeignKey('appuser.appuser_id', ondelete='CASCADE', onupdate='CASCADE'))
     access_id = db.Column(db.ForeignKey('access.access_id', ondelete='RESTRICT', onupdate='CASCADE'))
     access = db.relationship('Access', primaryjoin='PryceList.access_id == Access.access_id', backref='lists')
     appuser = db.relationship('Appuser', primaryjoin='PryceList.owner == Appuser.appuser_id', backref='lists')
@@ -89,7 +89,7 @@ class PryceListItem(db.Model):
 
     item_id = db.Column(db.ForeignKey('item.item_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
-    pryce_list_id = db.Column(db.ForeignKey('pryce_list.pryce_list_id', ondelete='RESTRICT', onupdate='CASCADE'), primary_key=True,
+    pryce_list_id = db.Column(db.ForeignKey('pryce_list.pryce_list_id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True,
                         nullable=False)
     quantity = db.Column(db.Integer, server_default=db.FetchedValue())
 

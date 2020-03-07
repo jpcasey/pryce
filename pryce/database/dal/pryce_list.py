@@ -16,6 +16,25 @@ class DALPryceList:
         plists = PryceList.query.filter_by(owner=appuser_id).all()
         return plists
 
+    def duplicate_pryce_list(self, plid, new_list):
+        plist = PryceList.query.filter_by(pryce_list_id=plid).first()
+        plist_items = PryceListItem.query.filter_by(pryce_list_id=plid).all()
+        #persist newlist to get PK
+        db.session.add(new_list)
+        db.session.commit()
+        new_list_items = []
+        new_pli = None
+        #now copy all of the FK relations into newlist from plist
+        for i in plist_items:
+            new_pli = PryceListItem()
+            new_pli.pryce_list_id = new_list.pryce_list_id
+            new_pli.quantity = i.quantity
+            new_pli.item_id = i.item_id
+            new_list_items.append(new_pli)
+        db.session.add_all(new_list_items)
+        db.session.commit()
+        return new_list
+
     def create_pryce_list(self, obj):
         sqla_list = PryceList()
         sqla_list.owner = obj.get('owner');
@@ -60,6 +79,11 @@ class DALPryceList:
 
     def delete_item_from_list(self, pryce_list_id, item_id):
         result = PryceListItem.query.filter_by(item_id=item_id, pryce_list_id=pryce_list_id).delete()
+        db.session.commit()
+        return result
+
+    def delete_list(self, pryce_list_id):
+        result = PryceList.query.filter_by(pryce_list_id=pryce_list_id).delete()
         db.session.commit()
         return result
 

@@ -21,6 +21,24 @@ def get_lists():
 
 # /- POST
 # Adds a list to the user's profile and returns it
+@bp.route('/duplicate/<pryce_list_id>', methods=['POST'])
+@jwt_required
+def duplicate_list(pryce_list_id):
+    req_body = None;
+    try:
+        req_body = request.get_json()
+    except ValueError as ve:
+        return jsonify(message='Invalid JSON'), 400
+
+    pl_sch = PryceListSchema();
+    tmp = {'owner': get_jwt_identity().get('appuser_id'), 'name': req_body}
+    plObj = pl_sch.load(tmp)
+    pl_sqlao = dal_pl.duplicate_pryce_list(pryce_list_id, plObj)
+    schemaDump = PryceListSchema().dump(pl_sqlao)
+    return schemaDump, 200
+
+# /- POST
+# Adds a list to the user's profile and returns it
 @bp.route('/', methods=['POST'])
 @jwt_required
 def create_list():
@@ -71,7 +89,19 @@ def get_list_details(pryce_list_id):
 
 # /<pryce_list_id>/<item_id> - DELETE
 # Deletes an item given a pryce_list_id and an item_id
+@bp.route('/<pryce_list_id>', methods=['DELETE'])
+@jwt_required
+def delete_list(pryce_list_id):
+    rows_deleted = dal_pl.delete_list(pryce_list_id)
+    if rows_deleted == 0:
+        return jsonify(message = 'List was not deleted'), 404
+    return jsonify(message = f'Successfully deleted list'), 200
+
+
+# /<pryce_list_id>/<item_id> - DELETE
+# Deletes an item given a pryce_list_id and an item_id
 @bp.route('/<pryce_list_id>/<item_id>', methods=['DELETE'])
+@jwt_required
 def delete_item_from_list(pryce_list_id, item_id):
     rows_deleted = dal_pl.delete_item_from_list(pryce_list_id, item_id)
     if rows_deleted == 0:

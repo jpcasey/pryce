@@ -44,6 +44,16 @@ def get_store(store_id):
     store = dalstore.get_store(store_id)
     if store is None:
         return jsonify(message='Store not found'), 404
+
+    # populate the store address field if not on record & persist it
+    if store.address is None:
+        uri = f'https://maps.googleapis.com/maps/api/place/details/json?key={current_app.config["GOOGLE_API_KEY"]}&place_id={store.place_id}&fields=formatted_address'
+        response = requests.get(uri)
+        if response.status_code == 200:
+            addr = response.json().get('result').get('formatted_address')
+            if addr:
+                store.address = addr
+
     return store_schema.jsonify(store)
 
 # /<store_id> - PUT

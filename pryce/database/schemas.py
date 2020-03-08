@@ -26,7 +26,7 @@ class PriceSchema(SQLAlchemyAutoSchema):
         load_instance = True
         include_fk = True
     
-    store = fields.Nested(StoreSchema, only=("name", "place_id", "lat", "lng"))
+    store = fields.Nested(StoreSchema)
     item = fields.Nested(ItemSchema)
 
 

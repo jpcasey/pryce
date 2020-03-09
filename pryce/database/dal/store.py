@@ -52,7 +52,7 @@ class DALStore():
         return store
 
     def get_comments(self, store_id):
-        comments = Comment.query.filter_by(store_id=store_id).all()
+        comments = Comment.query.filter_by(store_id=store_id).order_by(Comment.comment_id.desc()).all()
         return comments
         
     def get_comment(self, comment_id):
